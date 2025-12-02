@@ -1,0 +1,104 @@
+<div class="mt-3">
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label>Site</label>
+      <select class="form-control"
+              [(ngModel)]="selectedSiteId"
+              (change)="onSiteChange()">
+        <option *ngFor="let s of sites" [value]="s.siteId">
+          {{ s.siteId }}
+        </option>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label>Year (for population pyramid)</label>
+      <select class="form-control"
+              [(ngModel)]="selectedYear"
+              (change)="onYearChange()">
+        <option *ngFor="let y of years" [value]="y.year">
+          {{ y.year }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <h5>Household visit outcomes trend</h5>
+  <canvas baseChart
+          [data]="householdTrendData"
+          [options]="lineOptions"
+          [type]="'line'">
+  </canvas>
+<hr />
+
+<h5>Population summary trend (Total, Reproductive-age women, Under-5 children)</h5>
+<div *ngIf="populationSummaryChartOptions">
+<apx-chart
+  [series]="populationSummaryChartOptions.series"
+  [chart]="populationSummaryChartOptions.chart"
+  [xaxis]="populationSummaryChartOptions.xaxis"
+  [dataLabels]="populationSummaryChartOptions.dataLabels"
+  [stroke]="populationSummaryChartOptions.stroke"
+  [fill]="populationSummaryChartOptions.fill"
+  [legend]="populationSummaryChartOptions.legend"
+  [tooltip]="populationSummaryChartOptions.tooltip"
+  [markers]="populationSummaryChartOptions.markers">
+</apx-chart>
+
+</div>
+
+
+
+  <hr />
+
+  <h5>Total population per year</h5>
+  <canvas baseChart
+          [data]="totalPopulationData"
+          [options]="barOptions"
+          [type]="'bar'">
+  </canvas>
+
+   <hr />
+
+<h5>Population pyramid ({{ selectedYear }})</h5>
+
+<div style="height: 450px;">
+  <canvas
+    baseChart
+    [data]="pyramidChartData"
+    [options]="pyramidChartOptions"
+    [type]="'bar'">
+  </canvas>
+</div>
+
+  <hr />
+
+  <h5>Child pyramid ({{ selectedYear }})</h5>
+
+<div style="height: 450px;">
+  <canvas
+    baseChart
+    [data]="childpyramidChartData"
+    [options]="childpyramidChartOptions"
+    [type]="'bar'">
+  </canvas>
+</div>
+
+  <hr />
+
+   <h5>Household size trend</h5>
+  <canvas baseChart
+          [data]="householdSizeData"
+          [options]="barOptions"
+          [type]="'bar'">
+  </canvas>
+
+  <hr />
+
+  <h5>Migration trend</h5>
+  <canvas baseChart
+          [data]="migrationTrendData"
+          [options]="lineOptions"
+          [type]="'line'">
+  </canvas>
+</div>
