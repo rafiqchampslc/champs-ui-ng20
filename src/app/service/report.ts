@@ -48,6 +48,37 @@ export interface PopulationSummaryTrendRow {
   under5Children: number;
 }
 
+export interface MaritalStatusChangeTrendRow {
+  dataYear: number;
+  totalMSChanges: number;
+  divorces: number;
+  separations: number;
+  widowsWidowers: number;
+  reunions: number;
+}
+export interface MarriageAgeDistributionTrendRow {
+  dataYear: number;
+  maleUnder18: number;
+  male18To25: number;
+  male25To35: number;
+  male35Plus: number;
+  femaleUnder18: number;
+  female18To25: number;
+  female25To35: number;
+  female35Plus: number;
+}
+
+export interface BirthOutcomePregnancyTrendRow {
+  dataYear: number;
+  liveBirths: number;
+  stillBirths: number;
+  abortionsMiscarriages: number;
+  currentlyPregnant: number;
+  totalOutcome: number;
+}
+
+
+
 @Injectable({ providedIn: 'root' })
 export class Report {
   constructor(private http: HttpClient) {}
@@ -101,6 +132,26 @@ export class Report {
   getPopulationSummaryTrend(siteId: number) {
   return this.http.get<PopulationSummaryTrendRow[]>(
     `${API_BASE}/population-summary-trend`,
+    { params: new HttpParams().set('siteId', siteId) }
+  );
+}
+
+getMaritalStatusChangeTrend(siteId: number) {
+  return this.http.get<MaritalStatusChangeTrendRow[]>(
+    `${API_BASE}/marital-status-change-trend`,
+    { params: new HttpParams().set('siteId', siteId) }
+  );
+}
+getMarriageAgeDistributionTrend(siteId: number) {
+  return this.http.get<MarriageAgeDistributionTrendRow[]>(
+    `${API_BASE}/marriage-age-distribution-trend`,
+    { params: new HttpParams().set('siteId', siteId) }
+  );
+}
+
+getBirthOutcomePregnancyTrend(siteId: number) {
+  return this.http.get<BirthOutcomePregnancyTrendRow[]>(
+    `${API_BASE}/birth-outcome-pregnancy-trend`,
     { params: new HttpParams().set('siteId', siteId) }
   );
 }

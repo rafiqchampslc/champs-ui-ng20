@@ -12,6 +12,7 @@ import {
   MigrationTrendRow
 } from '../service/report'
 import {
+  NgApexchartsModule,
   ApexAxisChartSeries,
   ApexChart,
   ApexXAxis,
@@ -22,7 +23,10 @@ import {
   ApexLegend,
   ApexTooltip,
   ApexMarkers,
-  ApexGrid
+  ApexGrid,
+  ApexPlotOptions,
+  ApexResponsive,
+  ApexTitleSubtitle
 } from 'ng-apexcharts';
 
 export type PopulationSummaryChartOptions = {
@@ -35,6 +39,47 @@ export type PopulationSummaryChartOptions = {
   legend: ApexLegend;
   tooltip: ApexTooltip;
   markers: ApexMarkers;
+};
+
+export type MaritalStatusChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  stroke: ApexStroke;
+  legend: ApexLegend;
+  tooltip: ApexTooltip;
+  grid: ApexGrid;
+  plotOptions: ApexPlotOptions;
+};
+
+export type YearWiseMarriageAgeChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  plotOptions: ApexPlotOptions; // Added for horizontal bars
+  dataLabels: ApexDataLabels;
+  tooltip: ApexTooltip;
+  title: ApexTitleSubtitle;
+  grid: ApexGrid;
+  legend: ApexLegend;
+  colors: string[];
+};
+
+export type BirthOutcomeChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  dataLabels: ApexDataLabels;
+  stroke: ApexStroke;
+  fill: ApexFill;
+  markers: ApexMarkers;
+  grid: ApexGrid;
+  tooltip: ApexTooltip;
+  legend: ApexLegend;
+  colors: string[];
 };
 
 @Component({
@@ -106,7 +151,7 @@ export class Dashboard {
     }
   };
 
-    childpyramidChartData: ChartConfiguration<'bar'>['data'] = {
+  childpyramidChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [
       {
@@ -217,6 +262,206 @@ export class Dashboard {
     }
   };
 
+  maritalStatusChartOptions: MaritalStatusChartOptions = {
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 350,
+      stacked: false
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '60%',
+        dataLabels: {
+          position: 'top'      // 👈 RIGHT PLACE (this is valid!)
+        }
+      }
+    },
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    dataLabels: {
+      enabled: true,
+      offsetY: -20,              // moves label above bar
+      style: {
+        fontSize: '12px',
+        fontWeight: 'bold',
+        colors: ['#05690dff']        // black for readability
+      },
+      formatter: (val: any) => {
+        const num = Number(val);
+        return isNaN(num) ? '' : num.toLocaleString();
+      }
+    },
+
+    stroke: {
+      show: true,
+      width: 1
+    },
+    legend: {
+      position: 'top'
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    grid: {
+      show: true,
+      borderColor: '#e0e0e0',
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
+    }
+  };
+
+  yearWiseMarriageAgeChartOptions: YearWiseMarriageAgeChartOptions = {
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 500,
+      stacked: true,
+      toolbar: { show: true }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        barHeight: '70%',
+        dataLabels: {
+          position: 'center'
+        }
+      }
+    },
+    colors: [
+      '#08306B', '#08519C', '#3182BD', '#90c9e7ff',
+      '#85024cff', '#be0d69d0', '#f756c7ff', '#b83ff0ff'
+    ],
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => Math.abs(Number(val)).toLocaleString(),
+      style: {
+        colors: ['#fff']
+      }
+    },
+    title: {
+      text: 'Marriage Distribution: Male (Left) vs Female (Right)',
+      align: 'center'
+    },
+    xaxis: {
+      categories: [],
+      title: { text: 'Number of Marriages' },
+      labels: {
+        formatter: (val: any) => Math.abs(Number(val)).toLocaleString()
+      }
+    },
+    yaxis: {
+      title: { text: 'Year' },
+      labels: {
+        formatter: (val: any) => String(val).replace(/,/g, '')
+      }
+    },
+    grid: {
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: false } }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => Math.abs(Number(val)).toLocaleString()
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    }
+  };
+
+  birthOutcomeChartOptions: BirthOutcomeChartOptions = {
+    series: [],
+    chart: {
+      height: 450,
+      type: 'line',
+      stacked: false,
+      toolbar: { show: true }
+    },
+    colors: [
+      '#1D4ED8',   // Live births
+      '#c2064eff', // Stillbirths
+      '#dd900aff', // Abortions / miscarriages
+      '#01972eff', // Currently pregnant women (area)
+      '#8013acff'  // Total outcomes (line)
+    ],
+
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+
+    yaxis: {
+      title: { text: 'Number of events' }
+    },
+
+    // 🔢 Data labels visible but lightweight
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => Number(val).toLocaleString(),
+      style: {
+        fontSize: '11px',
+        fontWeight: 'bold'
+      }
+    },
+
+    stroke: {
+      width: [2, 2, 2, 3, 4],     // ✔ Line thicker and above area
+      curve: 'smooth'
+    },
+
+    fill: {
+      type: ['solid', 'solid', 'solid', 'gradient', 'solid'],
+      gradient: {
+        inverseColors: false,
+        shade: "light",
+        type: "vertical",
+        opacityFrom: 0.55,
+        opacityTo: 0.25,
+        stops: [0, 100, 100, 100]
+      }
+    },
+
+    markers: {
+      size: [0, 0, 0, 4, 6],   // ✔ markers on area & line only
+      strokeWidth: 2,
+      hover: { size: 7 }
+    },
+
+    grid: {
+      show: true,
+      borderColor: '#e0e0e0',
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
+    },
+
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    },
+
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => Number(val).toLocaleString()
+      }
+    }
+  };
+
 
 
   pyramidLabels: string[] = [];
@@ -242,6 +487,7 @@ export class Dashboard {
   loadSites() {
     this.reportService.getSites().subscribe(sites => {
       this.sites = sites;
+      debugger;
       if (sites.length) {
         this.selectedSiteId = sites[0].siteId;
         this.onSiteChange();
@@ -276,7 +522,94 @@ export class Dashboard {
     this.loadHouseholdSize();
     this.loadMigrationTrend();
     this.loadPopulationSummaryTrend();
+    this.loadMaritalStatusChangeTrend();
+    this.loadMarriageAgeDistributionTrend();
+    this.loadBirthOutcomePregnancyTrend();
 
+  }
+
+  loadBirthOutcomePregnancyTrend() {
+    if (!this.selectedSiteId) return;
+
+    this.reportService.getBirthOutcomePregnancyTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        const live = rows.map(r => r.liveBirths);
+        const still = rows.map(r => r.stillBirths);
+        const abort = rows.map(r => r.abortionsMiscarriages);
+        const preg = rows.map(r => r.currentlyPregnant);
+        const total = rows.map(r => r.totalOutcome);
+
+        this.birthOutcomeChartOptions.xaxis = {
+          ...this.birthOutcomeChartOptions.xaxis,
+          categories: years
+        };
+
+        this.birthOutcomeChartOptions.series = [
+          {
+            name: 'Live births',
+            type: 'column',
+            data: live
+          },
+          {
+            name: 'Stillbirths',
+            type: 'column',
+            data: still
+          },
+          {
+            name: 'Abortions / miscarriages',
+            type: 'column',
+            data: abort
+          },
+          {
+            name: 'Currently pregnant women',
+            type: 'area',
+            data: preg
+          },
+          {
+            name: 'Total outcomes',
+            type: 'line',
+            data: total
+          }
+        ];
+      });
+  }
+
+  loadMarriageAgeDistributionTrend() {
+    if (!this.selectedSiteId) { return; }
+
+    this.reportService.getMarriageAgeDistributionTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        // male values negative (left side), female positive (right)
+        const maleU18 = rows.map(r => -Number(r.maleUnder18));
+        const male18_25 = rows.map(r => -Number(r.male18To25));
+        const male25_35 = rows.map(r => -Number(r.male25To35));
+        const male35p = rows.map(r => -Number(r.male35Plus));
+
+        const femU18 = rows.map(r => Number(r.femaleUnder18));
+        const fem18_25 = rows.map(r => Number(r.female18To25));
+        const fem25_35 = rows.map(r => Number(r.female25To35));
+        const fem35p = rows.map(r => Number(r.female35Plus));
+
+        this.yearWiseMarriageAgeChartOptions.xaxis = {
+          ...this.yearWiseMarriageAgeChartOptions.xaxis,
+          categories: years
+        };
+
+        this.yearWiseMarriageAgeChartOptions.series = [
+          { name: 'Male <18', data: maleU18 },
+          { name: 'Male 18-25', data: male18_25 },
+          { name: 'Male 25-35', data: male25_35 },
+          { name: 'Male 35+', data: male35p },
+          { name: 'Female <18', data: femU18 },
+          { name: 'Female 18-25', data: fem18_25 },
+          { name: 'Female 25-35', data: fem25_35 },
+          { name: 'Female 35+', data: fem35p }
+        ];
+      });
   }
 
   loadPopulationSummaryTrend() {
@@ -343,36 +676,36 @@ export class Dashboard {
 
 
   loadPyramid() {
-  if (!this.selectedSiteId || !this.selectedYear) return;
+    if (!this.selectedSiteId || !this.selectedYear) return;
 
-  this.reportService.getPyramid(this.selectedSiteId, this.selectedYear)
-    .subscribe((rows: PopulationPyramidRow[]) => {
-debugger;
-      const labels = rows.map(r => r.ageGroupLabel);
-      const male   = rows.map(r => -Number(r.maleCount));    
-      const female = rows.map(r =>  Number(r.femaleCount));  
+    this.reportService.getPyramid(this.selectedSiteId, this.selectedYear)
+      .subscribe((rows: PopulationPyramidRow[]) => {
+        debugger;
+        const labels = rows.map(r => r.ageGroupLabel);
+        const male = rows.map(r => -Number(r.maleCount));
+        const female = rows.map(r => Number(r.femaleCount));
 
-      this.pyramidChartData.labels = labels;
-      this.pyramidChartData.datasets[0].data = male;
-      this.pyramidChartData.datasets[1].data = female;
-    });
-}
+        this.pyramidChartData.labels = labels;
+        this.pyramidChartData.datasets[0].data = male;
+        this.pyramidChartData.datasets[1].data = female;
+      });
+  }
 
   loadChildPyramid() {
-  if (!this.selectedSiteId || !this.selectedYear) return;
+    if (!this.selectedSiteId || !this.selectedYear) return;
 
-  this.reportService.getChildPyramid(this.selectedSiteId, this.selectedYear)
-    .subscribe((rows: ChildPyramidRow[]) => {
-debugger;
-      const labels = rows.map(r => r.ageGroupLabel);
-      const male   = rows.map(r => -Number(r.maleCount));    
-      const female = rows.map(r =>  Number(r.femaleCount));  
+    this.reportService.getChildPyramid(this.selectedSiteId, this.selectedYear)
+      .subscribe((rows: ChildPyramidRow[]) => {
+        debugger;
+        const labels = rows.map(r => r.ageGroupLabel);
+        const male = rows.map(r => -Number(r.maleCount));
+        const female = rows.map(r => Number(r.femaleCount));
 
-      this.childpyramidChartData.labels = labels;
-      this.childpyramidChartData.datasets[0].data = male;
-      this.childpyramidChartData.datasets[1].data = female;
-    });
-}
+        this.childpyramidChartData.labels = labels;
+        this.childpyramidChartData.datasets[0].data = male;
+        this.childpyramidChartData.datasets[1].data = female;
+      });
+  }
 
   loadHouseholdSize() {
     if (!this.selectedSiteId) return;
@@ -408,6 +741,43 @@ debugger;
             }
           ]
         };
+      });
+  }
+
+  loadMaritalStatusChangeTrend() {
+    if (!this.selectedSiteId) return;
+
+    this.reportService.getMaritalStatusChangeTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        this.maritalStatusChartOptions.xaxis = {
+          ...this.maritalStatusChartOptions.xaxis,
+          categories: years
+        };
+
+        this.maritalStatusChartOptions.series = [
+          {
+            name: 'Total marriages / cohabitation changes',
+            data: rows.map(r => r.totalMSChanges)
+          },
+          {
+            name: 'Divorces',
+            data: rows.map(r => r.divorces)
+          },
+          {
+            name: 'Separations',
+            data: rows.map(r => r.separations)
+          },
+          {
+            name: 'Widows / widowers',
+            data: rows.map(r => r.widowsWidowers)
+          },
+          {
+            name: 'Reunions',
+            data: rows.map(r => r.reunions)
+          }
+        ];
       });
   }
 

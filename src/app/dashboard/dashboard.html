@@ -101,4 +101,56 @@
           [options]="lineOptions"
           [type]="'line'">
   </canvas>
+
+  <hr />
+
+<h5>Marital status changes by year</h5>
+<apx-chart
+  [series]="maritalStatusChartOptions.series"
+  [chart]="maritalStatusChartOptions.chart"
+  [plotOptions]="maritalStatusChartOptions.plotOptions"
+  [xaxis]="maritalStatusChartOptions.xaxis"
+  [dataLabels]="maritalStatusChartOptions.dataLabels"
+  [stroke]="maritalStatusChartOptions.stroke"
+  [legend]="maritalStatusChartOptions.legend"
+  [tooltip]="maritalStatusChartOptions.tooltip"
+  [grid]="maritalStatusChartOptions.grid">
+</apx-chart>
+
+  <hr />
+
+<h5>Marriage age distribution by year (Male left, Female right)</h5>
+<apx-chart
+  [series]="yearWiseMarriageAgeChartOptions.series"
+  [chart]="yearWiseMarriageAgeChartOptions.chart"
+  [plotOptions]="yearWiseMarriageAgeChartOptions.plotOptions"
+  [colors]="yearWiseMarriageAgeChartOptions.colors"
+  [dataLabels]="yearWiseMarriageAgeChartOptions.dataLabels"
+  [xaxis]="yearWiseMarriageAgeChartOptions.xaxis"
+  [yaxis]="yearWiseMarriageAgeChartOptions.yaxis"
+  [grid]="yearWiseMarriageAgeChartOptions.grid"
+  [tooltip]="yearWiseMarriageAgeChartOptions.tooltip"
+  [legend]="yearWiseMarriageAgeChartOptions.legend"
+  [title]="yearWiseMarriageAgeChartOptions.title">
+</apx-chart>
+
+
+<hr />
+
+<h5>Birth outcomes and pregnancies by year</h5>
+<apx-chart
+  [series]="birthOutcomeChartOptions.series"
+  [chart]="birthOutcomeChartOptions.chart"
+  [xaxis]="birthOutcomeChartOptions.xaxis"
+  [yaxis]="birthOutcomeChartOptions.yaxis"
+  [dataLabels]="birthOutcomeChartOptions.dataLabels"
+  [stroke]="birthOutcomeChartOptions.stroke"
+  [fill]="birthOutcomeChartOptions.fill"
+  [markers]="birthOutcomeChartOptions.markers"
+  [grid]="birthOutcomeChartOptions.grid"
+  [tooltip]="birthOutcomeChartOptions.tooltip"
+  [legend]="birthOutcomeChartOptions.legend"
+  [colors]="birthOutcomeChartOptions.colors">
+</apx-chart>
+
 </div>
