@@ -113,6 +113,24 @@ export interface ChildDeathsAndStillbirthsTrendRow {
   stillbirths: number;
 }
 
+export interface Under5DeathAndStillbirthByPlaceRow {
+  dataYear: number;
+  facilityUnder5: number;
+  facilityStill: number;
+  homeUnder5: number;
+  homeStill: number;
+  unknownUnder5: number;
+  unknownStill: number;
+}
+
+export interface MortalityRatesTrendRow {
+  dataYear: number;
+  under5Rate: number;
+  infantRate: number;
+  neonatalRate: number;
+  stillbirthRatio: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class Report {
   constructor(private http: HttpClient) { }
@@ -217,4 +235,17 @@ export class Report {
   );
 }
 
+getUnder5DeathAndStillbirthByPlaceTrend(siteId: number) {
+  return this.http.get<Under5DeathAndStillbirthByPlaceRow[]>(
+    `${API_BASE}/under5-death-stillbirth-place-trend`,
+    { params: { siteId } }
+  );
+}
+
+getMortalityRatesTrend(siteId: number) {
+    return this.http.get<MortalityRatesTrendRow[]>(
+      `${API_BASE}/mortality-rates-trend`,
+      { params: { siteId } }
+    );
+  }
 }

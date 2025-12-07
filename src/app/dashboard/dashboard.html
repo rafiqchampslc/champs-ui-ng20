@@ -223,5 +223,34 @@
   [colors]="childDeathsStillbirthsChartOptions.colors">
 </apx-chart>
 
+<h5>Under-5 deaths and stillbirths by place of death and year</h5>
+<apx-chart
+  [series]="under5DeathPlaceChartOptions.series"
+  [chart]="under5DeathPlaceChartOptions.chart"
+  [plotOptions]="under5DeathPlaceChartOptions.plotOptions"
+  [xaxis]="under5DeathPlaceChartOptions.xaxis"
+  [yaxis]="under5DeathPlaceChartOptions.yaxis"
+  [dataLabels]="under5DeathPlaceChartOptions.dataLabels"
+  [legend]="under5DeathPlaceChartOptions.legend"
+  [tooltip]="under5DeathPlaceChartOptions.tooltip"
+  [grid]="under5DeathPlaceChartOptions.grid">
+</apx-chart>
+
+<hr />
+
+<h5>Mortality rates and stillbirth ratio by year</h5>
+<apx-chart
+  [series]="mortalityRatesChartOptions.series"
+  [chart]="mortalityRatesChartOptions.chart"
+  [xaxis]="mortalityRatesChartOptions.xaxis"
+  [yaxis]="mortalityRatesChartOptions.yaxis"
+  [stroke]="mortalityRatesChartOptions.stroke"
+  [dataLabels]="mortalityRatesChartOptions.dataLabels"
+  [markers]="mortalityRatesChartOptions.markers"
+  [grid]="mortalityRatesChartOptions.grid"
+  [tooltip]="mortalityRatesChartOptions.tooltip"
+  [legend]="mortalityRatesChartOptions.legend"
+  [colors]="mortalityRatesChartOptions.colors">
+</apx-chart>
 
 </div>

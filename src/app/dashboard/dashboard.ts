@@ -139,6 +139,33 @@ export type ChildDeathsStillbirthsChartOptions = {
   colors: string[];
 };
 
+export type Under5DeathPlaceChartOptions = {
+  series: any[];            // any[] so we can use "group"
+  chart: ApexChart;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  dataLabels: ApexDataLabels;
+  legend: ApexLegend;
+  tooltip: ApexTooltip;
+  grid: ApexGrid;
+};
+
+
+
+export type MortalityRatesChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  markers: ApexMarkers;
+  grid: ApexGrid;
+  tooltip: ApexTooltip;
+  legend: ApexLegend;
+  colors: string[];
+};
 
 @Component({
   selector: 'app-dashboard',
@@ -801,6 +828,136 @@ export class Dashboard {
     }
   };
 
+  under5DeathPlaceChartOptions: Under5DeathPlaceChartOptions = {
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 450,
+      stacked: true,
+      toolbar: { show: true }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        borderRadius: 2
+      }
+    },
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Number of deaths / stillbirths' },
+      labels: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => {
+        const num = Number(val);
+        return isNaN(num) ? '' : num.toLocaleString();
+      },
+      style: {
+        fontSize: '10px',
+        fontWeight: 'bold'
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    grid: {
+      show: true,
+      borderColor: '#e5e7eb',
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
+    }
+  };
+
+  mortalityRatesChartOptions: MortalityRatesChartOptions = {
+    series: [],
+    chart: {
+      type: 'line',
+      height: 420,
+      toolbar: { show: true },
+      zoom: { enabled: true }
+    },
+    colors: [
+      '#6366F1', // Under-5
+      '#0EA5E9', // Infant
+      '#10B981', // Neonatal
+      '#F97316'  // Stillbirth ratio
+    ],
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Rate per 1,000 live births' },
+      labels: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toFixed(1);
+        }
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => {
+        const num = Number(val);
+        return isNaN(num) ? '' : num.toFixed(1);
+      },
+      style: {
+        fontSize: '11px',
+        fontWeight: 'bold'
+      }
+    },
+    markers: {
+      size: 4,
+      strokeWidth: 2
+    },
+    grid: {
+      show: true,
+      borderColor: '#e5e7eb',
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toFixed(1);
+        }
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    }
+  };
+
+
   pyramidLabels: string[] = [];
   pyramidMale: number[] = [];
   pyramidFemale: number[] = [];
@@ -866,7 +1023,8 @@ export class Dashboard {
     this.loadBirthPlaceOutcomeByYear();
     this.loadBirthDeathTrend();
     this.loadChildDeathsStillbirthsTrend();
-
+    this.loadUnder5DeathAndStillbirthPlaceTrend();
+    this.loadMortalityRatesTrend();
   }
 
   loadBirthOutcomePregnancyTrend() {
@@ -983,7 +1141,6 @@ export class Dashboard {
       });
   }
 
-
   loadHouseholdTrend() {
     if (!this.selectedSiteId) return;
     this.reportService.getHouseholdTrend(this.selectedSiteId)
@@ -1014,7 +1171,6 @@ export class Dashboard {
         };
       });
   }
-
 
   loadPyramid() {
     if (!this.selectedSiteId || !this.selectedYear) return;
@@ -1278,6 +1434,108 @@ export class Dashboard {
               type: 'area',
               data: under5
             }
+          ]
+        };
+      });
+  }
+
+  loadUnder5DeathAndStillbirthPlaceTrend() {
+    if (!this.selectedSiteId) return;
+
+    this.reportService
+      .getUnder5DeathAndStillbirthByPlaceTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        const facilityU5 = rows.map(r => r.facilityUnder5);
+        const facilityStill = rows.map(r => r.facilityStill);
+        const homeU5 = rows.map(r => r.homeUnder5);
+        const homeStill = rows.map(r => r.homeStill);
+        const unknownU5 = rows.map(r => r.unknownUnder5);
+        const unknownStill = rows.map(r => r.unknownStill);
+
+        this.under5DeathPlaceChartOptions = {
+          ...this.under5DeathPlaceChartOptions,
+          xaxis: {
+            ...this.under5DeathPlaceChartOptions.xaxis,
+            categories: years
+          },
+          series: [
+            // Group 1: Facility
+            {
+              name: 'Under-5 deaths – facility',
+              type: 'bar',
+              group: 'facility',
+              data: facilityU5,
+              color: '#945400ff'
+            },
+            {
+              name: 'Stillbirths – facility',
+              type: 'bar',
+              group: 'facility',
+              data: facilityStill,
+              color: '#f59b26ff'
+            },
+
+            // Group 2: Home / community
+            {
+              name: 'Under-5 deaths – home/community',
+              type: 'bar',
+              group: 'home',
+              data: homeU5,
+              color: '#9b0b42c5'
+            },
+            {
+              name: 'Stillbirths – home/community',
+              type: 'bar',
+              group: 'home',
+              data: homeStill,
+              color: '#f50561ff'
+            },
+
+            // Group 3: Unknown place
+            {
+              name: 'Under-5 deaths – unknown',
+              type: 'bar',
+              group: 'unknown',
+              data: unknownU5,
+              color: '#1c720bc2'
+            },
+            {
+              name: 'Stillbirths – unknown',
+              type: 'bar',
+              group: 'unknown',
+              data: unknownStill,
+              color: '#25df00ff'
+            }
+          ]
+        };
+      });
+  }
+
+  loadMortalityRatesTrend() {
+    if (!this.selectedSiteId) return;
+
+    this.reportService.getMortalityRatesTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        const under5 = rows.map(r => r.under5Rate);
+        const infant = rows.map(r => r.infantRate);
+        const neonatal = rows.map(r => r.neonatalRate);
+        const stillbr = rows.map(r => r.stillbirthRatio);
+
+        this.mortalityRatesChartOptions = {
+          ...this.mortalityRatesChartOptions,
+          xaxis: {
+            ...this.mortalityRatesChartOptions.xaxis,
+            categories: years
+          },
+          series: [
+            { name: 'Under-5 mortality rate', data: under5 },
+            { name: 'Infant mortality rate', data: infant },
+            { name: 'Neonatal mortality rate', data: neonatal },
+            { name: 'Stillbirth ratio', data: stillbr }
           ]
         };
       });
