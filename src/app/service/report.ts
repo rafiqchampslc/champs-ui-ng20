@@ -77,11 +77,45 @@ export interface BirthOutcomePregnancyTrendRow {
   totalOutcome: number;
 }
 
+export interface BirthsByMotherAgeTrendRow {
+  dataYear: number;
+  births10_14: number;
+  births15_19: number;
+  births20_24: number;
+  births25_29: number;
+  births30_34: number;
+  births35_39: number;
+  births40_44: number;
+  births45_49: number;
+}
 
+export interface BirthPlaceOutcomeByYearRow {
+  dataYear: number;
+  facilityLive: number;
+  facilityStill: number;
+  homeCommLive: number;
+  homeCommStill: number;
+  unknownLive: number;
+  unknownStill: number;
+}
+
+export interface BirthDeathTrendRow {
+  dataYear: number;
+  totalLiveBirths: number;
+  totalDeaths: number;
+}
+
+export interface ChildDeathsAndStillbirthsTrendRow {
+  dataYear: number;
+  neonatalDeaths: number;
+  infantDeaths: number;
+  under5Deaths: number;
+  stillbirths: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class Report {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getSites(): Observable<SiteDto[]> {
     return this.http.get<SiteDto[]>(`${API_BASE}/sites`);
@@ -111,7 +145,7 @@ export class Report {
     });
   }
 
-    getChildPyramid(siteId: number, year: number): Observable<ChildPyramidRow[]> {
+  getChildPyramid(siteId: number, year: number): Observable<ChildPyramidRow[]> {
     return this.http.get<ChildPyramidRow[]>(`${API_BASE}/child-pyramid`, {
       params: new HttpParams().set('siteId', siteId).set('year', year)
     });
@@ -130,29 +164,56 @@ export class Report {
   }
 
   getPopulationSummaryTrend(siteId: number) {
-  return this.http.get<PopulationSummaryTrendRow[]>(
-    `${API_BASE}/population-summary-trend`,
-    { params: new HttpParams().set('siteId', siteId) }
-  );
-}
+    return this.http.get<PopulationSummaryTrendRow[]>(
+      `${API_BASE}/population-summary-trend`,
+      { params: new HttpParams().set('siteId', siteId) }
+    );
+  }
 
-getMaritalStatusChangeTrend(siteId: number) {
-  return this.http.get<MaritalStatusChangeTrendRow[]>(
-    `${API_BASE}/marital-status-change-trend`,
-    { params: new HttpParams().set('siteId', siteId) }
-  );
-}
-getMarriageAgeDistributionTrend(siteId: number) {
-  return this.http.get<MarriageAgeDistributionTrendRow[]>(
-    `${API_BASE}/marriage-age-distribution-trend`,
-    { params: new HttpParams().set('siteId', siteId) }
-  );
-}
+  getMaritalStatusChangeTrend(siteId: number) {
+    return this.http.get<MaritalStatusChangeTrendRow[]>(
+      `${API_BASE}/marital-status-change-trend`,
+      { params: new HttpParams().set('siteId', siteId) }
+    );
+  }
+  getMarriageAgeDistributionTrend(siteId: number) {
+    return this.http.get<MarriageAgeDistributionTrendRow[]>(
+      `${API_BASE}/marriage-age-distribution-trend`,
+      { params: new HttpParams().set('siteId', siteId) }
+    );
+  }
 
-getBirthOutcomePregnancyTrend(siteId: number) {
-  return this.http.get<BirthOutcomePregnancyTrendRow[]>(
-    `${API_BASE}/birth-outcome-pregnancy-trend`,
-    { params: new HttpParams().set('siteId', siteId) }
+  getBirthOutcomePregnancyTrend(siteId: number) {
+    return this.http.get<BirthOutcomePregnancyTrendRow[]>(
+      `${API_BASE}/birth-outcome-pregnancy-trend`,
+      { params: new HttpParams().set('siteId', siteId) }
+    );
+  }
+
+  getBirthsByMotherAgeTrend(siteId: number) {
+    return this.http.get<BirthsByMotherAgeTrendRow[]>(
+      `${API_BASE}/births-by-mother-age-trend`,
+      { params: new HttpParams().set('siteId', siteId) }
+    );
+  }
+  getBirthPlaceOutcomeByYear(siteId: number) {
+    return this.http.get<BirthPlaceOutcomeByYearRow[]>(
+      `${API_BASE}/birth-place-outcome-by-year`,
+      { params: new HttpParams().set('siteId', siteId) }
+    );
+  }
+
+  getBirthDeathTrend(siteId: number) {
+    return this.http.get<BirthDeathTrendRow[]>(
+      `${API_BASE}/birth-death-trend`,
+      { params: { siteId } }
+    );
+  }
+
+  getChildDeathsAndStillbirthsTrend(siteId: number) {
+  return this.http.get<ChildDeathsAndStillbirthsTrendRow[]>(
+    `${API_BASE}/child-deaths-stillbirths-trend`,
+    { params: { siteId } }
   );
 }
 

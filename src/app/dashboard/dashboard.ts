@@ -82,6 +82,64 @@ export type BirthOutcomeChartOptions = {
   colors: string[];
 };
 
+export type BirthsByMotherAgeChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  plotOptions: ApexPlotOptions;
+  colors: string[];
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  grid: ApexGrid;
+  tooltip: ApexTooltip;
+  legend: ApexLegend;
+};
+
+export type BirthPlaceOutcomeChartOptions = {
+  series: any[];
+  chart: ApexChart;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  legend: ApexLegend;
+  tooltip: ApexTooltip;
+};
+
+export type BirthDeathAreaChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  fill: ApexFill;
+  markers: ApexMarkers;
+  grid: ApexGrid;
+  tooltip: ApexTooltip;
+  legend: ApexLegend;
+  colors: string[];
+};
+
+export type ChildDeathsStillbirthsChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  fill: ApexFill;
+  markers: ApexMarkers;
+  grid: ApexGrid;
+  tooltip: ApexTooltip;
+  legend: ApexLegend;
+  colors: string[];
+};
+
+
 @Component({
   selector: 'app-dashboard',
   standalone: false,
@@ -462,7 +520,286 @@ export class Dashboard {
     }
   };
 
+  birthsByMotherAgeChartOptions: BirthsByMotherAgeChartOptions = {
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 450,
+      stacked: true,
+      toolbar: { show: true }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        barHeight: '70%'
+      }
+    },
+    stroke: {
+      show: true,
+      width: .3,
+      colors: ['#dfdfdfff']   // white border
+    },
+    colors: [
+      '#bb0303ff', // 10–14
+      '#2563EB', // 15–19
+      '#088f5bff', // 20–24
+      '#18c9a2ff', // 25–29
+      '#8cc900d8', // 30–34
+      '#e4b006ff', // 35–39
+      '#eb7e19ff', // 40–44
+      '#2b0101ff'  // 45–49
+    ],
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => {
+        const num = Number(val);
+        return isNaN(num) ? '' : num.toLocaleString();
+      },
+      style: {
+        fontSize: '10px',
+        fontWeight: 'bold',
+        colors: ['#ffffff']
+      }
+    },
+    xaxis: {
+      title: { text: 'Number of births' },
+      labels: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    yaxis: {
+      title: { text: 'Year' }
+    },
+    grid: {
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: false } }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    }
+  };
 
+  birthPlaceOutcomeChartOptions: BirthPlaceOutcomeChartOptions = {
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 650,
+      stacked: true,
+      toolbar: { show: true }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        borderRadius: 2
+      }
+    },
+    stroke: {
+      show: true,
+      width: .3,
+      colors: ['#dfdfdfff']   // white border
+    },
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Number of births' }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => Number(val).toLocaleString(),
+      style: { fontWeight: 'bold' }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => Number(val).toLocaleString()
+      }
+    }
+  };
+
+  birthDeathAreaChartOptions: BirthDeathAreaChartOptions = {
+    series: [],
+    chart: {
+      type: 'area',
+      height: 400,
+      toolbar: { show: true }
+    },
+    colors: [
+      '#1D4ED8', // Live births - blue
+      '#DC2626'  // Deaths - red
+    ],
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Number of events' },
+      labels: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => {
+        const num = Number(val);
+        return isNaN(num) ? '' : num.toLocaleString();
+      },
+      style: {
+        fontSize: '11px',
+        fontWeight: 'bold'
+      }
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        inverseColors: false,
+        shade: "light",
+        type: "vertical",
+        shadeIntensity: 0.2,
+        opacityFrom: 0.45,
+        opacityTo: 0.05,
+        stops: [0, 100]
+      }
+    },
+    markers: {
+      size: 4,
+      strokeWidth: 2
+    },
+    grid: {
+      show: true,
+      borderColor: '#e5e7eb',
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    }
+  };
+
+  childDeathsStillbirthsChartOptions: ChildDeathsStillbirthsChartOptions = {
+    series: [],
+    chart: {
+      type: 'line',        // base type for mixed chart
+      height: 420,
+      stacked: false,
+      toolbar: { show: true }
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: '55%'
+      }
+    },
+    colors: [
+      '#280b91c9', // column: stillbirths (orange)
+      '#da9c16ff', // area: neonatal
+      '#a310c0ff', // area: infant
+      '#df0808ff'  // area: under-5
+    ],
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Number of deaths' },
+      labels: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: [0, 3, 3, 3]   // 0 for column, 3 for area outlines
+    },
+
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => {
+        const num = Number(val);
+        return isNaN(num) ? '' : num.toLocaleString();
+      },
+      style: {
+        fontSize: '11px',
+        fontWeight: 'bold'
+      }
+    },
+    fill: {
+      type: ['solid', 'gradient', 'gradient', 'gradient'],
+      gradient: {
+        inverseColors: false,
+        shade: "light",
+        type: "vertical",
+        shadeIntensity: 0.15,
+        opacityFrom: 0.25,
+        opacityTo: 0.05,
+        stops: [0, 100]
+      }
+    },
+    markers: {
+      size: [0, 4, 4, 4],
+      strokeWidth: 2
+    },
+    grid: {
+      show: true,
+      borderColor: '#e5e7eb',
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    }
+  };
 
   pyramidLabels: string[] = [];
   pyramidMale: number[] = [];
@@ -525,6 +862,10 @@ export class Dashboard {
     this.loadMaritalStatusChangeTrend();
     this.loadMarriageAgeDistributionTrend();
     this.loadBirthOutcomePregnancyTrend();
+    this.loadBirthsByMotherAgeTrend();
+    this.loadBirthPlaceOutcomeByYear();
+    this.loadBirthDeathTrend();
+    this.loadChildDeathsStillbirthsTrend();
 
   }
 
@@ -781,5 +1122,165 @@ export class Dashboard {
       });
   }
 
+  loadBirthsByMotherAgeTrend() {
+    if (!this.selectedSiteId) return;
+
+    this.reportService.getBirthsByMotherAgeTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        const d10_14 = rows.map(r => r.births10_14);
+        const d15_19 = rows.map(r => r.births15_19);
+        const d20_24 = rows.map(r => r.births20_24);
+        const d25_29 = rows.map(r => r.births25_29);
+        const d30_34 = rows.map(r => r.births30_34);
+        const d35_39 = rows.map(r => r.births35_39);
+        const d40_44 = rows.map(r => r.births40_44);
+        const d45_49 = rows.map(r => r.births45_49);
+
+        this.birthsByMotherAgeChartOptions.xaxis = {
+          ...this.birthsByMotherAgeChartOptions.xaxis,
+          categories: years   // for horizontal bar, Apex still uses xaxis.categories
+        };
+
+        this.birthsByMotherAgeChartOptions.series = [
+          { name: '10–14', data: d10_14 },
+          { name: '15–19', data: d15_19 },
+          { name: '20–24', data: d20_24 },
+          { name: '25–29', data: d25_29 },
+          { name: '30–34', data: d30_34 },
+          { name: '35–39', data: d35_39 },
+          { name: '40–44', data: d40_44 },
+          { name: '45–49', data: d45_49 }
+        ];
+      });
+  }
+
+  loadBirthPlaceOutcomeByYear() {
+    if (!this.selectedSiteId) return;
+
+    this.reportService.getBirthPlaceOutcomeByYear(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        this.birthPlaceOutcomeChartOptions = {
+          ...this.birthPlaceOutcomeChartOptions,
+          xaxis: {
+            ...this.birthPlaceOutcomeChartOptions.xaxis,
+            categories: years
+          },
+          series: [
+            // Group 1: Facility
+            {
+              name: 'Facility live births',
+              group: 'facility',
+              data: rows.map(r => r.facilityLive),
+              color: '#1D4ED8'
+            },
+            {
+              name: 'Facility stillbirths',
+              group: 'facility',
+              data: rows.map(r => r.facilityStill),
+              color: '#8f0746ff'
+            },
+
+            // Group 2: Home / community
+            {
+              name: 'Home/community live births',
+              group: 'home',
+              data: rows.map(r => r.homeCommLive),
+              color: '#16A34A'
+            },
+            {
+              name: 'Home/community stillbirths',
+              group: 'home',
+              data: rows.map(r => r.homeCommStill),
+              color: '#c23a04ff'
+            },
+
+            // Group 3: Unknown place
+            {
+              name: 'Unknown place live births',
+              group: 'unknown',
+              data: rows.map(r => r.unknownLive),
+              color: '#250792ff'
+            },
+            {
+              name: 'Unknown place stillbirths',
+              group: 'unknown',
+              data: rows.map(r => r.unknownStill),
+              color: '#e60d0dff'
+            }
+          ]
+        };
+      });
+
+  }
+
+  loadBirthDeathTrend() {
+    if (!this.selectedSiteId) { return; }
+
+    this.reportService.getBirthDeathTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+        const births = rows.map(r => r.totalLiveBirths);
+        const deaths = rows.map(r => r.totalDeaths);
+
+        this.birthDeathAreaChartOptions = {
+          ...this.birthDeathAreaChartOptions,
+          xaxis: {
+            ...this.birthDeathAreaChartOptions.xaxis,
+            categories: years
+          },
+          series: [
+            { name: 'Live births', data: births },
+            { name: 'Deaths', data: deaths }
+          ]
+        };
+      });
+  }
+
+  loadChildDeathsStillbirthsTrend() {
+    if (!this.selectedSiteId) return;
+
+    this.reportService.getChildDeathsAndStillbirthsTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+        const still = rows.map(r => r.stillbirths);
+        const neonatal = rows.map(r => r.neonatalDeaths);
+        const infant = rows.map(r => r.infantDeaths);
+        const under5 = rows.map(r => r.under5Deaths);
+
+        this.childDeathsStillbirthsChartOptions = {
+          ...this.childDeathsStillbirthsChartOptions,
+          xaxis: {
+            ...this.childDeathsStillbirthsChartOptions.xaxis,
+            categories: years
+          },
+          series: [
+            {
+              name: 'Stillbirths (place of death)',
+              type: 'column',
+              data: still
+            },
+            {
+              name: 'Neonatal deaths (<28 days)',
+              type: 'area',
+              data: neonatal
+            },
+            {
+              name: 'Infant deaths (<12 months)',
+              type: 'area',
+              data: infant
+            },
+            {
+              name: 'Child deaths (<5 years)',
+              type: 'area',
+              data: under5
+            }
+          ]
+        };
+      });
+  }
 
 }
