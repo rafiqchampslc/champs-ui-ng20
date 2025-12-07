@@ -1,0 +1,20 @@
+<!-- population-pyramids.component.html -->
+ <br/>
+<div class="container">
+<button class="btn btn-secondary mb-3" (click)="goBack()">
+  ⬅ Back to Dashboard
+</button>
+<br/>
+  <h3>Population pyramids – Site {{ siteId }}</h3>
+
+  <div *ngFor="let p of pyramids" class="pyramid-card">
+    <h5>Year {{ p.year }}</h5>
+    <div style="height: 320px;">
+      <canvas baseChart
+              [data]="p.data"
+              [options]="p.options"
+              [type]="'bar'">
+      </canvas>
+    </div>
+  </div>
+</div>

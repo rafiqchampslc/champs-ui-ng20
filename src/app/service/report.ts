@@ -131,6 +131,13 @@ export interface MortalityRatesTrendRow {
   stillbirthRatio: number;
 }
 
+export interface PopulationPyramidAllYearsRow {
+  dataYear: number;
+  ageGroupLabel: string;
+  maleCount: number;
+  femaleCount: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class Report {
   constructor(private http: HttpClient) { }
@@ -248,4 +255,11 @@ getMortalityRatesTrend(siteId: number) {
       { params: { siteId } }
     );
   }
+
+  getPopulationPyramidsAllYears(siteId: number) {
+  return this.http.get<PopulationPyramidAllYearsRow[]>(
+    `${API_BASE}/population-pyramids-all-years`,
+    { params: { siteId } }
+  );
+}
 }

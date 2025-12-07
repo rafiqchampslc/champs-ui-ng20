@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { Router } from '@angular/router';
 import {
   Report,
   SiteDto,
@@ -151,8 +152,6 @@ export type Under5DeathPlaceChartOptions = {
   grid: ApexGrid;
 };
 
-
-
 export type MortalityRatesChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -166,6 +165,7 @@ export type MortalityRatesChartOptions = {
   legend: ApexLegend;
   colors: string[];
 };
+
 
 @Component({
   selector: 'app-dashboard',
@@ -972,7 +972,7 @@ export class Dashboard {
     plugins: { tooltip: { enabled: true }, legend: { display: true } }
   };
 
-  constructor(private reportService: Report) { }
+  constructor(private reportService: Report , private router: Router) { }
 
   ngOnInit(): void {
     this.loadSites();
@@ -987,6 +987,15 @@ export class Dashboard {
         this.onSiteChange();
       }
     });
+  }
+
+   openPopulationPyramidsPage() {
+    debugger;
+    if (!this.selectedSiteId) { return; }
+    this.router.navigate(
+      ['/population-pyramids'],
+      { queryParams: { siteId: this.selectedSiteId } }
+    );
   }
 
   onSiteChange() {
