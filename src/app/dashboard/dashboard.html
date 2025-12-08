@@ -28,12 +28,7 @@
   <!-- existing site dropdown -->
   <!-- ... -->
 
-  <br/>
-  <button class="btn btn-outline-primary"
-          (click)="openPopulationPyramidsPage()"
-          [disabled]="!selectedSiteId">
-    View population pyramids
-  </button>
+
 </div>
 
   <h5>Household visit outcomes trend</h5>
@@ -73,6 +68,13 @@
 
    <hr />
 
+     <br/>
+  <button class="btn btn-outline-primary"
+          (click)="openPopulationPyramidsPage()"
+          [disabled]="!selectedSiteId">
+    View population pyramids
+  </button>
+    <br/>
 <h5>Population pyramid ({{ selectedYear }})</h5>
 
 <div style="height: 450px;">
@@ -85,6 +87,14 @@
 </div>
 
   <hr />
+
+  <button class="btn btn-outline-primary ms-2"
+        (click)="openUnder5PyramidsPage()"
+        [disabled]="!selectedSiteId">
+  View under-5 pyramids
+</button>
+
+<br/><br/>
 
   <h5>Child pyramid ({{ selectedYear }})</h5>
 

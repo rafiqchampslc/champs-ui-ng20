@@ -9,16 +9,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { App } from './app';
 import { Dashboard } from './dashboard/dashboard';
 import { PopulationPyramids } from './population-pyramids/population-pyramids';
+import { Under5Pyramids } from './under5-pyramids/under5-pyramids';
 
 const routes: Routes = [
   { path: '', component: Dashboard },  // default route
-  { path: 'population-pyramids', component: PopulationPyramids }
+  { path: 'population-pyramids', component: PopulationPyramids },
+   { path: 'under5-pyramids', component: Under5Pyramids } 
 ];
 @NgModule({
   declarations: [
     App,
     Dashboard,
-    PopulationPyramids
+    PopulationPyramids,
+    Under5Pyramids
   ],
   imports: [
     BrowserModule,

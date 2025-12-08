@@ -1,0 +1,22 @@
+<!-- under5-pyramids/under5-pyramids.html -->
+<div class="container">
+  <button class="btn btn-secondary mb-3" (click)="goBack()">
+  ⬅ Back to Dashboard
+  </button>
+
+  <h3>Under-5 child population pyramids – Site {{ siteId }}</h3>
+
+  <div *ngFor="let p of pyramids" class="my-4 p-3 border rounded">
+    <h5>Year {{ p.year }}</h5>
+    <apx-chart
+      [series]="p.options.series"
+      [chart]="p.options.chart"
+      [plotOptions]="p.options.plotOptions"
+      [xaxis]="p.options.xaxis"
+      [yaxis]="p.options.yaxis"
+      [tooltip]="p.options.tooltip"
+      [dataLabels]="p.options.dataLabels"
+      [colors]="p.options.colors">
+    </apx-chart>
+  </div>
+</div>

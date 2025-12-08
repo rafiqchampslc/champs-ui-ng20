@@ -998,6 +998,16 @@ export class Dashboard {
     );
   }
 
+    openUnder5PyramidsPage() {
+      debugger;
+    if (!this.selectedSiteId) return;
+
+    this.router.navigate(
+      ['/under5-pyramids'],
+      { queryParams: { siteId: this.selectedSiteId } }
+    );
+  }
+
   onSiteChange() {
     if (!this.selectedSiteId) return;
     const siteId = this.selectedSiteId;

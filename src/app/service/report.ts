@@ -138,6 +138,13 @@ export interface PopulationPyramidAllYearsRow {
   femaleCount: number;
 }
 
+export interface Under5ChildPyramidRow {
+  dataYear: number;
+  ageGroupLabel: string;
+  maleCount: number;
+  femaleCount: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class Report {
   constructor(private http: HttpClient) { }
@@ -262,4 +269,12 @@ getMortalityRatesTrend(siteId: number) {
     { params: { siteId } }
   );
 }
+
+getUnder5ChildPyramidsAllYears(siteId: number) {
+  return this.http.get<Under5ChildPyramidRow[]>(
+    `${API_BASE}/under5-child-pyramids-all-years`,
+    { params: { siteId } }
+  );
+}
+
 }
