@@ -98,14 +98,16 @@ export class Under5Pyramids implements OnInit {
   ],
   chart: {
     type: 'bar',
-    height: 350,
+    height: 450,
     stacked: true,
     toolbar: { show: true }
   },
+  
   plotOptions: {
     bar: {
       horizontal: true,
-      barHeight: '60%'
+      // make bars taller so they touch (similar to barPercentage ~ .93)
+      barHeight: '97%'
     }
   },
   xaxis: {

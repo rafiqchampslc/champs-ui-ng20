@@ -12,6 +12,7 @@ interface PyramidChart {
   year: number;
   data: ChartConfiguration['data'];
   options: ChartConfiguration['options'];
+  hhSize: number;
 }
 @Component({
   selector: 'app-population-pyramids',
@@ -93,8 +94,16 @@ export class PopulationPyramids implements OnInit {
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
+        // Make bars occupy full category space (no gaps)
+        datasets: {
+          bar: {
+            barPercentage: .93,
+            categoryPercentage: 1.0,
+            maxBarThickness: 40
+          }
+        },
         plugins: {
-          legend: { position: 'top' },
+          legend: { position: 'bottom' },
           tooltip: {
             callbacks: {
               label: ctx => {
@@ -120,8 +129,8 @@ export class PopulationPyramids implements OnInit {
           }
         }
       };
-
-      return { year, data, options };
+debugger;
+      return { year, data, options, hhSize: yearRows[0].hhSize};
     });
   }
 }

@@ -8,8 +8,8 @@
   <h3>Population pyramids – Site {{ siteId }}</h3>
 
   <div *ngFor="let p of pyramids" class="pyramid-card">
-    <h5>Year {{ p.year }}</h5>
-    <div style="height: 320px;">
+    <h5>Year {{ p.year }}  (Household Size: {{ p.hhSize }})</h5>
+    <div style="height: 420px;">
       <canvas baseChart
               [data]="p.data"
               [options]="p.options"

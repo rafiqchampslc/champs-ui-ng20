@@ -166,6 +166,21 @@ export type MortalityRatesChartOptions = {
   colors: string[];
 };
 
+export type MigrationRatesPerThousandChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  markers: ApexMarkers;
+  grid: ApexGrid;
+  tooltip: ApexTooltip;
+  legend: ApexLegend;
+  colors: string[];
+};
+
+
 
 @Component({
   selector: 'app-dashboard',
@@ -174,7 +189,7 @@ export type MortalityRatesChartOptions = {
   styleUrl: './dashboard.css',
 })
 
-export class Dashboard {
+export class Dashboard implements OnInit {
   sites: SiteDto[] = [];
   years: YearDto[] = [];
   selectedSiteId: number | null = null;
@@ -551,13 +566,13 @@ export class Dashboard {
     series: [],
     chart: {
       type: 'bar',
-      height: 450,
+      height: 650,
       stacked: true,
       toolbar: { show: true }
     },
     plotOptions: {
       bar: {
-        horizontal: true,
+        horizontal: false,
         barHeight: '70%'
       }
     },
@@ -957,6 +972,72 @@ export class Dashboard {
     }
   };
 
+  migrationRatesPerThousandChartOptions: MigrationRatesPerThousandChartOptions = {
+  series: [],
+  chart: {
+    type: 'area',
+    height: 420,
+    toolbar: { show: true },
+    zoom: { enabled: true }
+  },
+  colors: [
+    '#22C55E', // In-migration rate
+    '#EF4444'  // Out-migration rate
+  ],
+  xaxis: {
+    categories: [],
+    title: { text: 'Year' }
+  },
+  yaxis: {
+    title: { text: 'Rate per 1,000 mid-year population' },
+    labels: {
+      formatter: (val: any) => {
+        const num = Number(val);
+        return isNaN(num) ? '' : num.toFixed(1);
+      }
+    }
+  },
+  stroke: {
+    curve: 'smooth',
+    width: 3
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: any) => {
+      const num = Number(val);
+      return isNaN(num) ? '' : num.toFixed(1);
+    },
+    style: {
+      fontSize: '11px',
+      fontWeight: 'bold'
+    }
+  },
+  markers: {
+    size: 4,
+    strokeWidth: 2
+  },
+  grid: {
+    show: true,
+    borderColor: '#e5e7eb',
+    xaxis: { lines: { show: false } },
+    yaxis: { lines: { show: true } }
+  },
+  tooltip: {
+    shared: true,
+    intersect: false,
+    y: {
+      formatter: (val: any) => {
+        const num = Number(val);
+        return isNaN(num) ? '' : num.toFixed(2);
+      }
+    }
+  },
+  legend: {
+    position: 'top',
+    horizontalAlign: 'center'
+  }
+};
+
 
   pyramidLabels: string[] = [];
   pyramidMale: number[] = [];
@@ -1034,6 +1115,7 @@ export class Dashboard {
     this.loadChildPyramid();
     this.loadHouseholdSize();
     this.loadMigrationTrend();
+    this.loadMigrationRatesPerThousandTrend();
     this.loadPopulationSummaryTrend();
     this.loadMaritalStatusChangeTrend();
     this.loadMarriageAgeDistributionTrend();
@@ -1044,6 +1126,7 @@ export class Dashboard {
     this.loadChildDeathsStillbirthsTrend();
     this.loadUnder5DeathAndStillbirthPlaceTrend();
     this.loadMortalityRatesTrend();
+
   }
 
   loadBirthOutcomePregnancyTrend() {
@@ -1260,6 +1343,37 @@ export class Dashboard {
       });
   }
 
+  loadMigrationRatesPerThousandTrend() {
+  if (!this.selectedSiteId) return;
+
+  this.reportService.getMigrationRatesPerThousandTrend(this.selectedSiteId)
+    .subscribe(rows => {
+      const years = rows.map(r => r.dataYear.toString());
+
+      const inRates = rows.map(r => r.inMigrationRatePerThousand);
+      const outRates = rows.map(r => r.outMigrationRatePerThousand);
+
+      this.migrationRatesPerThousandChartOptions = {
+        ...this.migrationRatesPerThousandChartOptions,
+        xaxis: {
+          ...this.migrationRatesPerThousandChartOptions.xaxis,
+          categories: years
+        },
+        series: [
+          {
+            name: 'In-migration per 1,000',
+            data: inRates
+          },
+          {
+            name: 'Out-migration per 1,000',
+            data: outRates
+          }
+        ]
+      };
+    });
+}
+
+
   loadMaritalStatusChangeTrend() {
     if (!this.selectedSiteId) return;
 
@@ -1309,9 +1423,12 @@ export class Dashboard {
         const d20_24 = rows.map(r => r.births20_24);
         const d25_29 = rows.map(r => r.births25_29);
         const d30_34 = rows.map(r => r.births30_34);
-        const d35_39 = rows.map(r => r.births35_39);
-        const d40_44 = rows.map(r => r.births40_44);
-        const d45_49 = rows.map(r => r.births45_49);
+        // const d35_39 = rows.map(r => r.births35_39);
+        // const d40_44 = rows.map(r => r.births40_44);
+        // const d45_49 = rows.map(r => r.births45_49);
+        const d35_39 = rows.map(r => r.births35_39 + r.births40_44 + r.births45_49);
+        //const d40_44 = rows.map(r => r.births40_44);
+        //const d45_49 = rows.map(r => r.births45_49);
 
         this.birthsByMotherAgeChartOptions.xaxis = {
           ...this.birthsByMotherAgeChartOptions.xaxis,
@@ -1324,9 +1441,9 @@ export class Dashboard {
           { name: '20–24', data: d20_24 },
           { name: '25–29', data: d25_29 },
           { name: '30–34', data: d30_34 },
-          { name: '35–39', data: d35_39 },
-          { name: '40–44', data: d40_44 },
-          { name: '45–49', data: d45_49 }
+          { name: '35+', data: d35_39 },
+          // { name: '40–44', data: d40_44 },
+          // { name: '45–49', data: d45_49 }
         ];
       });
   }

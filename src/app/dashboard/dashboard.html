@@ -116,7 +116,26 @@
           [type]="'bar'">
   </canvas>
 
-  <hr />
+
+<hr />
+
+<h5>Migration in / out per 1,000 mid-year population</h5>
+<apx-chart
+  [series]="migrationRatesPerThousandChartOptions.series"
+  [chart]="migrationRatesPerThousandChartOptions.chart"
+  [xaxis]="migrationRatesPerThousandChartOptions.xaxis"
+  [yaxis]="migrationRatesPerThousandChartOptions.yaxis"
+  [stroke]="migrationRatesPerThousandChartOptions.stroke"
+  [dataLabels]="migrationRatesPerThousandChartOptions.dataLabels"
+  [markers]="migrationRatesPerThousandChartOptions.markers"
+  [grid]="migrationRatesPerThousandChartOptions.grid"
+  [tooltip]="migrationRatesPerThousandChartOptions.tooltip"
+  [legend]="migrationRatesPerThousandChartOptions.legend"
+  [colors]="migrationRatesPerThousandChartOptions.colors">
+</apx-chart>
+
+<hr />
+
 
   <h5>Migration trend</h5>
   <canvas baseChart

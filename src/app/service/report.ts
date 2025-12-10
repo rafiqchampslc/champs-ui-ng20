@@ -136,6 +136,7 @@ export interface PopulationPyramidAllYearsRow {
   ageGroupLabel: string;
   maleCount: number;
   femaleCount: number;
+  hhSize: number;
 }
 
 export interface Under5ChildPyramidRow {
@@ -144,6 +145,13 @@ export interface Under5ChildPyramidRow {
   maleCount: number;
   femaleCount: number;
 }
+
+export interface MigrationRatesPerThousandTrendRow {
+  dataYear: number;
+  inMigrationRatePerThousand: number;
+  outMigrationRatePerThousand: number;
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class Report {
@@ -276,5 +284,13 @@ getUnder5ChildPyramidsAllYears(siteId: number) {
     { params: { siteId } }
   );
 }
+
+getMigrationRatesPerThousandTrend(siteId: number) {
+  return this.http.get<MigrationRatesPerThousandTrendRow[]>(
+    `${API_BASE}/migration-rates-per-thousand`,
+    { params: { siteId } }
+  );
+}
+
 
 }
