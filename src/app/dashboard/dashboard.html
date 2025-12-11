@@ -31,12 +31,28 @@
 
 </div>
 
-  <h5>Household visit outcomes trend</h5>
+  <!-- <h5>Household visit outcomes trend</h5>
   <canvas baseChart
           [data]="householdTrendData"
           [options]="lineOptions"
           [type]="'line'">
-  </canvas>
+  </canvas> -->
+<hr />
+<h5>Household visit outcomes trend</h5>
+<apx-chart
+  [series]="householdVisitOutcomesChartOptions.series"
+  [chart]="householdVisitOutcomesChartOptions.chart"
+  [plotOptions]="householdVisitOutcomesChartOptions.plotOptions"
+  [xaxis]="householdVisitOutcomesChartOptions.xaxis"
+  [yaxis]="householdVisitOutcomesChartOptions.yaxis"
+  [dataLabels]="householdVisitOutcomesChartOptions.dataLabels"
+  [legend]="householdVisitOutcomesChartOptions.legend"
+  [tooltip]="householdVisitOutcomesChartOptions.tooltip"
+  [grid]="householdVisitOutcomesChartOptions.grid"
+  [stroke]="householdVisitOutcomesChartOptions.stroke"
+  [colors]="householdVisitOutcomesChartOptions.colors">
+</apx-chart>
+
 <hr />
 
 <h5>Population summary trend (Total, Reproductive-age women, Under-5 children)</h5>
@@ -56,7 +72,7 @@
 </div>
 
 
-
+<!-- 
   <hr />
 
   <h5>Total population per year</h5>
@@ -64,7 +80,7 @@
           [data]="totalPopulationData"
           [options]="barOptions"
           [type]="'bar'">
-  </canvas>
+  </canvas> -->
 
    <hr />
 
@@ -75,7 +91,7 @@
     View population pyramids
   </button>
     <br/>
-<h5>Population pyramid ({{ selectedYear }})</h5>
+<!-- <h5>Population pyramid ({{ selectedYear }})</h5>
 
 <div style="height: 450px;">
   <canvas
@@ -84,7 +100,7 @@
     [options]="pyramidChartOptions"
     [type]="'bar'">
   </canvas>
-</div>
+</div> -->
 
   <hr />
 
@@ -96,7 +112,7 @@
 
 <br/><br/>
 
-  <h5>Child pyramid ({{ selectedYear }})</h5>
+  <!-- <h5>Child pyramid ({{ selectedYear }})</h5>
 
 <div style="height: 450px;">
   <canvas
@@ -105,16 +121,16 @@
     [options]="childpyramidChartOptions"
     [type]="'bar'">
   </canvas>
-</div>
+</div> -->
 
-  <hr />
+  <!-- <hr />
 
    <h5>Household size trend</h5>
   <canvas baseChart
           [data]="householdSizeData"
           [options]="barOptions"
           [type]="'bar'">
-  </canvas>
+  </canvas> -->
 
 
 <hr />
@@ -137,14 +153,14 @@
 <hr />
 
 
-  <h5>Migration trend</h5>
+  <!-- <h5>Migration trend</h5>
   <canvas baseChart
           [data]="migrationTrendData"
           [options]="lineOptions"
           [type]="'line'">
   </canvas>
 
-  <hr />
+  <hr /> -->
 
 <h5>Marital status changes by year</h5>
 <apx-chart

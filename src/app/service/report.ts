@@ -152,7 +152,16 @@ export interface MigrationRatesPerThousandTrendRow {
   outMigrationRatePerThousand: number;
 }
 
-
+export interface HouseholdVisitOutcomesTrendRow {
+  dataYear: number;
+  totalHouseholdsInCatchment: number;
+  householdsVisited: number;
+  householdsInterviewed: number;
+  activeHouseholds: number;
+  absentHouseholds: number;
+  refusedHouseholds: number;
+}
+ 
 @Injectable({ providedIn: 'root' })
 export class Report {
   constructor(private http: HttpClient) { }
@@ -292,5 +301,11 @@ getMigrationRatesPerThousandTrend(siteId: number) {
   );
 }
 
+getHouseholdVisitOutcomesTrend(siteId: number) {
+  return this.http.get<HouseholdVisitOutcomesTrendRow[]>(
+    `${API_BASE}/household-visit-outcomes-trend`,
+    { params: { siteId } }
+  );
+}
 
 }

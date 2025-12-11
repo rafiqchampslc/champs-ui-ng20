@@ -180,6 +180,19 @@ export type MigrationRatesPerThousandChartOptions = {
   colors: string[];
 };
 
+export type HouseholdVisitOutcomesChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  dataLabels: ApexDataLabels;
+  stroke: ApexStroke;
+  legend: ApexLegend;
+  tooltip: ApexTooltip;
+  grid: ApexGrid;
+  colors: string[];
+};
 
 
 @Component({
@@ -973,70 +986,146 @@ export class Dashboard implements OnInit {
   };
 
   migrationRatesPerThousandChartOptions: MigrationRatesPerThousandChartOptions = {
-  series: [],
-  chart: {
-    type: 'area',
-    height: 420,
-    toolbar: { show: true },
-    zoom: { enabled: true }
-  },
-  colors: [
-    '#22C55E', // In-migration rate
-    '#EF4444'  // Out-migration rate
-  ],
-  xaxis: {
-    categories: [],
-    title: { text: 'Year' }
-  },
-  yaxis: {
-    title: { text: 'Rate per 1,000 mid-year population' },
-    labels: {
+    series: [],
+    chart: {
+      type: 'area',
+      height: 420,
+      toolbar: { show: true },
+      zoom: { enabled: true }
+    },
+    colors: [
+      '#22C55E', // In-migration rate
+      '#EF4444'  // Out-migration rate
+    ],
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Rate per 1,000 mid-year population' },
+      labels: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toFixed(1);
+        }
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: {
+      enabled: true,
       formatter: (val: any) => {
         const num = Number(val);
         return isNaN(num) ? '' : num.toFixed(1);
+      },
+      style: {
+        fontSize: '11px',
+        fontWeight: 'bold'
       }
-    }
-  },
-  stroke: {
-    curve: 'smooth',
-    width: 3
-  },
-  dataLabels: {
-    enabled: true,
-    formatter: (val: any) => {
-      const num = Number(val);
-      return isNaN(num) ? '' : num.toFixed(1);
     },
-    style: {
-      fontSize: '11px',
-      fontWeight: 'bold'
+    markers: {
+      size: 4,
+      strokeWidth: 2
+    },
+    grid: {
+      show: true,
+      borderColor: '#e5e7eb',
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toFixed(2);
+        }
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
     }
-  },
-  markers: {
-    size: 4,
-    strokeWidth: 2
-  },
-  grid: {
-    show: true,
-    borderColor: '#e5e7eb',
-    xaxis: { lines: { show: false } },
-    yaxis: { lines: { show: true } }
-  },
-  tooltip: {
-    shared: true,
-    intersect: false,
-    y: {
+  };
+
+  householdVisitOutcomesChartOptions: HouseholdVisitOutcomesChartOptions = {
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 620,
+      stacked: true,
+      toolbar: { show: true }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        borderRadius: 2
+      }
+    },
+    colors: [
+      '#0ea5e9', // Total households in catchment
+      '#22c55e', // Visited
+      '#10b981', // Interviewed
+      '#6366f1', // Active
+      '#f97316', // Absent
+      '#ef4444'  // Refused
+    ],
+    // thin white border around each bar (indicator)
+    stroke: {
+      show: true,
+      width: .25,
+      colors: ['#ffffff']
+    },
+
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Number of households' },
+      labels: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    dataLabels: {
+      enabled: true,
       formatter: (val: any) => {
         const num = Number(val);
-        return isNaN(num) ? '' : num.toFixed(2);
+        return isNaN(num) ? '' : num.toLocaleString();
+      },
+      style: {
+        fontSize: '10px',
+        fontWeight: 'bold'
       }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => {
+          const num = Number(val);
+          return isNaN(num) ? '' : num.toLocaleString();
+        }
+      }
+    },
+    grid: {
+      show: true,
+      borderColor: '#e5e7eb',
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
     }
-  },
-  legend: {
-    position: 'top',
-    horizontalAlign: 'center'
-  }
-};
+  };
 
 
   pyramidLabels: string[] = [];
@@ -1053,7 +1142,7 @@ export class Dashboard implements OnInit {
     plugins: { tooltip: { enabled: true }, legend: { display: true } }
   };
 
-  constructor(private reportService: Report , private router: Router) { }
+  constructor(private reportService: Report, private router: Router) { }
 
   ngOnInit(): void {
     this.loadSites();
@@ -1070,7 +1159,7 @@ export class Dashboard implements OnInit {
     });
   }
 
-   openPopulationPyramidsPage() {
+  openPopulationPyramidsPage() {
     debugger;
     if (!this.selectedSiteId) { return; }
     this.router.navigate(
@@ -1079,8 +1168,8 @@ export class Dashboard implements OnInit {
     );
   }
 
-    openUnder5PyramidsPage() {
-      debugger;
+  openUnder5PyramidsPage() {
+    debugger;
     if (!this.selectedSiteId) return;
 
     this.router.navigate(
@@ -1109,7 +1198,7 @@ export class Dashboard implements OnInit {
 
   loadAllCharts() {
     if (!this.selectedSiteId || !this.selectedYear) return;
-    this.loadHouseholdTrend();
+    //this.loadHouseholdTrend();
     this.loadTotalPopulation();
     this.loadPyramid();
     this.loadChildPyramid();
@@ -1126,6 +1215,7 @@ export class Dashboard implements OnInit {
     this.loadChildDeathsStillbirthsTrend();
     this.loadUnder5DeathAndStillbirthPlaceTrend();
     this.loadMortalityRatesTrend();
+    this.loadHouseholdVisitOutcomesTrend();
 
   }
 
@@ -1344,34 +1434,34 @@ export class Dashboard implements OnInit {
   }
 
   loadMigrationRatesPerThousandTrend() {
-  if (!this.selectedSiteId) return;
+    if (!this.selectedSiteId) return;
 
-  this.reportService.getMigrationRatesPerThousandTrend(this.selectedSiteId)
-    .subscribe(rows => {
-      const years = rows.map(r => r.dataYear.toString());
+    this.reportService.getMigrationRatesPerThousandTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
 
-      const inRates = rows.map(r => r.inMigrationRatePerThousand);
-      const outRates = rows.map(r => r.outMigrationRatePerThousand);
+        const inRates = rows.map(r => r.inMigrationRatePerThousand);
+        const outRates = rows.map(r => r.outMigrationRatePerThousand);
 
-      this.migrationRatesPerThousandChartOptions = {
-        ...this.migrationRatesPerThousandChartOptions,
-        xaxis: {
-          ...this.migrationRatesPerThousandChartOptions.xaxis,
-          categories: years
-        },
-        series: [
-          {
-            name: 'In-migration per 1,000',
-            data: inRates
+        this.migrationRatesPerThousandChartOptions = {
+          ...this.migrationRatesPerThousandChartOptions,
+          xaxis: {
+            ...this.migrationRatesPerThousandChartOptions.xaxis,
+            categories: years
           },
-          {
-            name: 'Out-migration per 1,000',
-            data: outRates
-          }
-        ]
-      };
-    });
-}
+          series: [
+            {
+              name: 'In-migration per 1,000',
+              data: inRates
+            },
+            {
+              name: 'Out-migration per 1,000',
+              data: outRates
+            }
+          ]
+        };
+      });
+  }
 
 
   loadMaritalStatusChangeTrend() {
@@ -1672,6 +1762,38 @@ export class Dashboard implements OnInit {
             { name: 'Infant mortality rate', data: infant },
             { name: 'Neonatal mortality rate', data: neonatal },
             { name: 'Stillbirth ratio', data: stillbr }
+          ]
+        };
+      });
+  }
+
+  loadHouseholdVisitOutcomesTrend() {
+    if (!this.selectedSiteId) return;
+
+    this.reportService.getHouseholdVisitOutcomesTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        const total = rows.map(r => r.totalHouseholdsInCatchment);
+        const visited = rows.map(r => r.householdsVisited);
+        const interviewed = rows.map(r => r.householdsInterviewed);
+        const active = rows.map(r => r.activeHouseholds);
+        const absent = rows.map(r => r.absentHouseholds);
+        const refused = rows.map(r => r.refusedHouseholds);
+
+        this.householdVisitOutcomesChartOptions = {
+          ...this.householdVisitOutcomesChartOptions,
+          xaxis: {
+            ...this.householdVisitOutcomesChartOptions.xaxis,
+            categories: years
+          },
+          series: [
+            { name: 'Total households in catchment', data: total },
+            { name: 'Visited households', data: visited },
+            { name: 'Interviewed households', data: interviewed },
+            { name: 'Active households', data: active },
+            { name: 'Absent households', data: absent },
+            { name: 'Refused households', data: refused }
           ]
         };
       });
