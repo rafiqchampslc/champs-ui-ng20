@@ -30,6 +30,13 @@
 
 
 </div>
+<br/>
+<button class="btn btn-outline-secondary mt-3"
+        (click)="openSiteReportPage()"
+        [disabled]="!selectedSiteId">
+  View site-wise aggregated HDSS report
+</button>
+
 
   <!-- <h5>Household visit outcomes trend</h5>
   <canvas baseChart

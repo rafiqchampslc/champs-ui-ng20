@@ -10,18 +10,21 @@ import { App } from './app';
 import { Dashboard } from './dashboard/dashboard';
 import { PopulationPyramids } from './population-pyramids/population-pyramids';
 import { Under5Pyramids } from './under5-pyramids/under5-pyramids';
+import { SiteReport } from './site-report/site-report';
 
 const routes: Routes = [
   { path: '', component: Dashboard },  // default route
   { path: 'population-pyramids', component: PopulationPyramids },
-   { path: 'under5-pyramids', component: Under5Pyramids } 
+   { path: 'under5-pyramids', component: Under5Pyramids },
+     { path: 'site-report', component: SiteReport } 
 ];
 @NgModule({
   declarations: [
     App,
     Dashboard,
     PopulationPyramids,
-    Under5Pyramids
+    Under5Pyramids,
+    SiteReport
   ],
   imports: [
     BrowserModule,

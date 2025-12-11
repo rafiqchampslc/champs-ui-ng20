@@ -161,6 +161,18 @@ export interface HouseholdVisitOutcomesTrendRow {
   absentHouseholds: number;
   refusedHouseholds: number;
 }
+
+export interface SiteAggregatedReportRow {
+  siteId: number;
+  siteName: string;
+  countryName: string;
+  dataYear: number;
+  indicatorCode: string;
+  indicatorName: string;
+  dataType: string;
+  lastEntryDate: string | null;   // ISO date string from API
+  indicatorValue: number;
+}
  
 @Injectable({ providedIn: 'root' })
 export class Report {
@@ -304,6 +316,13 @@ getMigrationRatesPerThousandTrend(siteId: number) {
 getHouseholdVisitOutcomesTrend(siteId: number) {
   return this.http.get<HouseholdVisitOutcomesTrendRow[]>(
     `${API_BASE}/household-visit-outcomes-trend`,
+    { params: { siteId } }
+  );
+}
+
+getSiteAggregatedReport(siteId: number) {
+  return this.http.get<SiteAggregatedReportRow[]>(
+    `${API_BASE}/site-aggregated-report`,
     { params: { siteId } }
   );
 }

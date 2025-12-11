@@ -1,0 +1,77 @@
+/* Striped rows + sticky-first-column background sync */
+.report-table {
+  border-collapse: collapse;
+  border: 1px solid #dee2e6;
+  width: 100%;
+}
+
+/* prefer even rows as the faint stripe (matches Bootstrap-ish look) */
+.report-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+.report-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* ensure sticky column shows the same background as its row */
+.report-table .sticky-col {
+  background-clip: padding-box;
+  z-index: 4;
+}
+
+/* match sticky-col background to row striping */
+.report-table tbody tr:nth-child(even) .sticky-col {
+  background-color: #fafafa;
+}
+.report-table tbody tr:nth-child(odd) .sticky-col {
+  background-color: #ffffff;
+}
+
+/* keep header above sticky column and preserve header background */
+.report-table thead th {
+  z-index: 5;
+  background-color: #f8f9fa;
+}
+
+/* keep borders visible */
+.report-table th,
+.report-table td {
+  border: 1px solid #dee2e6;
+}
+/* Table cell padding and vertical alignment */
+.report-table th,
+.report-table td {
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+/* Slightly tighter padding for small screens */
+@media (max-width: 576px) {
+  .report-table th,
+  .report-table td {
+    padding: 0.35rem 0.5rem;
+  }
+}
+
+/* Ensure sticky column padding matches the row */
+.report-table .sticky-col {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+
+/* Indent male/female age-group rows */
+.indent-level-1 {
+  padding-left: 30px !important;
+}
+
+.indent-level-2 {
+  padding-left: 60px !important;
+}
+
+.empty-row td {
+  padding: 4px 0;
+  border: none !important;
+  background-color: transparent !important;
+}

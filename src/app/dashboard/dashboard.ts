@@ -1159,6 +1159,15 @@ export class Dashboard implements OnInit {
     });
   }
 
+    openSiteReportPage() {
+    if (!this.selectedSiteId) return;
+
+    this.router.navigate(
+      ['/site-report'],
+      { queryParams: { siteId: this.selectedSiteId } }
+    );
+  }
+
   openPopulationPyramidsPage() {
     debugger;
     if (!this.selectedSiteId) { return; }
