@@ -173,7 +173,27 @@ export interface SiteAggregatedReportRow {
   lastEntryDate: string | null;   // ISO date string from API
   indicatorValue: number;
 }
- 
+ export interface PregnancyOutcomeStackedRow {
+  dataYear: number;
+  liveBirths: number;
+  stillbirths: number;
+  abortionMiscarriage: number;
+}
+
+export interface CumulativeUnder5DeathsRow {
+  dataYear: number;
+  deathsWithinFirst24Hours: number;
+  deaths1To6Days: number;
+  deaths7To29Days: number;
+  deaths29DaysTo11Months: number;
+  deaths1To2Years: number;
+  deaths2To3Years: number;
+  deaths3To4Years: number;
+  deaths4To5Years: number;
+}
+
+
+
 @Injectable({ providedIn: 'root' })
 export class Report {
   constructor(private http: HttpClient) { }
@@ -327,4 +347,17 @@ getSiteAggregatedReport(siteId: number) {
   );
 }
 
+getPregnancyOutcomeStacked(siteId: number) {
+  return this.http.get<PregnancyOutcomeStackedRow[]>(
+    `${API_BASE}/pregnancy-outcome-stacked`,
+    { params: { siteId } }
+  );
+}
+
+getCumulativeUnder5Deaths(siteId: number) {
+  return this.http.get<CumulativeUnder5DeathsRow[]>(
+    `${API_BASE}/cumulative-under5-deaths`,
+    { params: { siteId } }
+  );
+}
 }
