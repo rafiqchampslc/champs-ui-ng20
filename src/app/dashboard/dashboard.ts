@@ -46,7 +46,7 @@ export type MaritalStatusChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
-  yaxis?: ApexYAxis;
+  yaxis: ApexYAxis;
   dataLabels: ApexDataLabels;
   stroke: ApexStroke;
   legend: ApexLegend;
@@ -60,8 +60,9 @@ export type YearWiseMarriageAgeChartOptions = {
   chart: ApexChart;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
-  plotOptions: ApexPlotOptions; // Added for horizontal bars
+  plotOptions: ApexPlotOptions;
   dataLabels: ApexDataLabels;
+  stroke: ApexStroke;
   tooltip: ApexTooltip;
   title: ApexTitleSubtitle;
   grid: ApexGrid;
@@ -428,7 +429,7 @@ export class Dashboard implements OnInit {
         horizontal: false,
         columnWidth: '60%',
         dataLabels: {
-          position: 'top'      // 👈 RIGHT PLACE (this is valid!)
+          position: 'top'
         }
       }
     },
@@ -436,37 +437,50 @@ export class Dashboard implements OnInit {
       categories: [],
       title: { text: 'Year' }
     },
+
+    yaxis: {
+      min: 0,
+      max: 100,
+      tickAmount: 5,
+      decimalsInFloat: 0,
+      title: { text: 'Percent (%)' },
+      labels: {
+        formatter: (val: any) => Math.round(val).toString()
+      }
+    },
+
     dataLabels: {
       enabled: true,
-      offsetY: -20,              // moves label above bar
+      offsetY: -20,
       style: {
         fontSize: '12px',
         fontWeight: 'bold',
-        colors: ['#05690dff']        // black for readability
+        colors: ['#05690dff']
       },
       formatter: (val: any) => {
         const num = Number(val);
-        return isNaN(num) ? '' : num.toLocaleString();
+        return isNaN(num) ? '' : `${num.toFixed(1)}%`;
       }
     },
 
     stroke: {
       show: true,
-      width: 1
+      width: 2,
+      colors: ['#fff']  // ✅ creates visible separation between bars
     },
+
     legend: {
       position: 'top'
     },
+
     tooltip: {
       shared: true,
       intersect: false,
       y: {
-        formatter: (val: any) => {
-          const num = Number(val);
-          return isNaN(num) ? '' : num.toLocaleString();
-        }
+        formatter: (val: any) => `${Number(val).toFixed(1)}%`
       }
     },
+
     grid: {
       show: true,
       borderColor: '#e0e0e0',
@@ -474,6 +488,68 @@ export class Dashboard implements OnInit {
       yaxis: { lines: { show: true } }
     }
   };
+
+  // yearWiseMarriageAgeChartOptions: YearWiseMarriageAgeChartOptions = {
+  //   series: [],
+  //   chart: {
+  //     type: 'bar',
+  //     height: 500,
+  //     stacked: true,
+  //     toolbar: { show: true }
+  //   },
+  //   plotOptions: {
+  //     bar: {
+  //       horizontal: true,
+  //       barHeight: '70%',
+  //       dataLabels: {
+  //         position: 'center'
+  //       }
+  //     }
+  //   },
+  //   colors: [
+  //     '#08306B', '#08519C', '#3182BD', '#90c9e7ff',
+  //     '#85024cff', '#be0d69d0', '#f756c7ff', '#b83ff0ff'
+  //   ],
+  //   dataLabels: {
+  //     enabled: true,
+  //     formatter: (val: any) => Math.abs(Number(val)).toLocaleString(),
+  //     style: {
+  //       colors: ['#fff']
+  //     }
+  //   },
+  //   title: {
+  //     text: 'Marriage Distribution: Male (Left) vs Female (Right)',
+  //     align: 'center'
+  //   },
+  //   xaxis: {
+  //     categories: [],
+  //     title: { text: 'Number of Marriages' },
+  //     labels: {
+  //       formatter: (val: any) => Math.abs(Number(val)).toLocaleString()
+  //     }
+  //   },
+  //   yaxis: {
+  //     title: { text: 'Year' },
+  //     labels: {
+  //       formatter: (val: any) => String(val).replace(/,/g, '')
+  //     }
+  //   },
+  //   grid: {
+  //     xaxis: { lines: { show: true } },
+  //     yaxis: { lines: { show: false } }
+  //   },
+  //   tooltip: {
+  //     shared: true,
+  //     intersect: false,
+  //     y: {
+  //       formatter: (val: any) => Math.abs(Number(val)).toLocaleString()
+  //     }
+  //   },
+  //   legend: {
+  //     position: 'top',
+  //     horizontalAlign: 'center'
+  //   }
+  // };
 
   yearWiseMarriageAgeChartOptions: YearWiseMarriageAgeChartOptions = {
     series: [],
@@ -485,12 +561,16 @@ export class Dashboard implements OnInit {
     },
     plotOptions: {
       bar: {
-        horizontal: true,
-        barHeight: '70%',
+        horizontal: false,
+        columnWidth: '40%',
         dataLabels: {
           position: 'center'
         }
       }
+    },
+    stroke: {
+      width: .1,
+      colors: ['#fff']
     },
     colors: [
       '#08306B', '#08519C', '#3182BD', '#90c9e7ff',
@@ -498,45 +578,170 @@ export class Dashboard implements OnInit {
     ],
     dataLabels: {
       enabled: true,
-      formatter: (val: any) => Math.abs(Number(val)).toLocaleString(),
+      formatter: (val: any) => val ? Number(val).toLocaleString() : '',
       style: {
-        colors: ['#fff']
+        colors: ['#fff'],
+        fontSize: '12px',
+        fontWeight: 600
       }
     },
     title: {
-      text: 'Marriage Distribution: Male (Left) vs Female (Right)',
+      text: 'Marriage Distribution: Male vs Female',
       align: 'center'
     },
     xaxis: {
       categories: [],
-      title: { text: 'Number of Marriages' },
-      labels: {
-        formatter: (val: any) => Math.abs(Number(val)).toLocaleString()
-      }
+      title: { text: 'Year' }
     },
     yaxis: {
-      title: { text: 'Year' },
-      labels: {
-        formatter: (val: any) => String(val).replace(/,/g, '')
-      }
+      title: { text: 'Number of Marriages' }
     },
-    grid: {
-      xaxis: { lines: { show: true } },
-      yaxis: { lines: { show: false } }
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
     },
     tooltip: {
       shared: true,
       intersect: false,
       y: {
-        formatter: (val: any) => Math.abs(Number(val)).toLocaleString()
+        formatter: (val: any) => Number(val).toLocaleString()
       }
+    },
+    grid: {
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
+    }
+  };
+
+  // yearWisePerMarriageAgeChartOptions: YearWiseMarriageAgeChartOptions = {
+  //   series: [],
+  //   chart: {
+  //     type: 'bar',
+  //     height: 500,
+  //     stacked: true,
+  //     toolbar: { show: true }
+  //   },
+  //   plotOptions: {
+  //     bar: {
+  //       horizontal: false,
+  //       columnWidth: '40%',
+  //       dataLabels: {
+  //         position: 'center'
+  //       }
+  //     }
+  //   },
+  //   stroke: {
+  //     width: .1,
+  //     colors: ['#fff']
+  //   },
+  //   colors: [
+  //     '#08306B', '#08519C', '#3182BD', '#90c9e7ff',
+  //     '#85024cff', '#be0d69d0', '#f756c7ff', '#b83ff0ff'
+  //   ],
+  //   dataLabels: {
+  //     enabled: true,
+  //     formatter: (val: any) => val ? Number(val).toLocaleString() : '',
+  //     style: {
+  //       colors: ['#fff'],
+  //       fontSize: '12px',
+  //       fontWeight: 600
+  //     }
+  //   },
+  //   title: {
+  //     text: 'Average Marriage Distribution: Male vs Female',
+  //     align: 'center'
+  //   },
+  //   xaxis: {
+  //     categories: [],
+  //     title: { text: 'Year' }
+  //   },
+  //   yaxis: {
+  //     title: { text: 'Number of Marriages' }
+  //   },
+  //   legend: {
+  //     position: 'top',
+  //     horizontalAlign: 'center'
+  //   },
+  //   tooltip: {
+  //     shared: true,
+  //     intersect: false,
+  //     y: {
+  //       formatter: (val: any) => Number(val).toLocaleString()
+  //     }
+  //   },
+  //   grid: {
+  //     xaxis: { lines: { show: false } },
+  //     yaxis: { lines: { show: true } }
+  //   }
+  // };
+
+yearWisePerMarriageAgeChartOptions: YearWiseMarriageAgeChartOptions = {
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 500,
+      stacked: true,
+      toolbar: { show: true }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '40%',
+        dataLabels: {
+          position: 'center'
+        }
+      }
+    },
+    stroke: {
+      width: .1,
+      colors: ['#fff']
+    },
+    colors: [
+      '#08306B', '#08519C', '#3182BD', '#90c9e7ff',
+      '#85024cff', '#be0d69d0', '#f756c7ff', '#b83ff0ff'
+    ],
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => val ? `${Number(val).toFixed(1)}%` : '',
+      style: {
+        colors: ['#fff'],
+        fontSize: '12px',
+        fontWeight: 600
+      }
+    },
+    title: {
+      text: 'Average Marriage Distribution: Male vs Female',
+      align: 'center'
+    },
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Percent (%)' },
+      labels: {
+        formatter: (val: any) => `${Number(val).toFixed(0)}%`
+      },
+      max: 100
     },
     legend: {
       position: 'top',
       horizontalAlign: 'center'
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => `${Number(val).toFixed(1)}%`
+      }
+    },
+    grid: {
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } }
     }
   };
 
+  
   birthOutcomeChartOptions: BirthOutcomeChartOptions = {
     series: [],
     chart: {
@@ -1169,149 +1374,149 @@ export class Dashboard implements OnInit {
   };
 
   pregnancyOutcomeStackedChartOptions: PregnancyOutcomeStackedChartOptions = {
-  series: [],
-  chart: {
-    type: 'bar',
-    height: 420,
-    stacked: true,
-    toolbar: { show: true }
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '55%'
-    }
-  },
-  colors: [
-    '#1D4ED8', // Live births
-    '#C026D3', // Stillbirths
-    '#F59E0B'  // Abortion/Miscarriage
-  ],
-  xaxis: {
-    categories: [],
-    title: { text: 'Year' }
-  },
-  yaxis: {
-    title: { text: 'Total outcomes' },
-    labels: {
-      formatter: (val: any) => Number(val).toLocaleString()
-    }
-  },
-  dataLabels: {
-    enabled: true,
-    formatter: (val: any) => Number(val).toLocaleString(),
-    style: { fontSize: '11px', fontWeight: 'bold' }
-  },
-  tooltip: {
-    shared: true,
-    intersect: false,
-    y: {
-      formatter: (val: any) => Number(val).toLocaleString()
-    }
-  },
-  legend: {
-    position: 'top',
-    horizontalAlign: 'center'
-  },
-  grid: {
-    borderColor: '#e5e7eb',
-    yaxis: { lines: { show: true } }
-  }
-};
-
-pregnancyOutcomePercentChartOptions: PregnancyOutcomePercentChartOptions = {
-  series: [],
-  chart: {
-    type: 'bar',
-    height: 420,
-    stacked: true,
-    stackType: '100%',
-    toolbar: { show: true }
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '55%'
-    }
-  },
-  colors: [
-    '#1D4ED8', // Live births
-    '#C026D3', // Stillbirths
-    '#F59E0B'  // Abortion/Miscarriage
-  ],
-  xaxis: {
-    categories: [],
-    title: { text: 'Year' }
-  },
-  yaxis: {
-    title: { text: 'Percent (%)' },
-    labels: {
-      formatter: (val: any) => `${Number(val).toFixed(0)}%`
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 420,
+      stacked: true,
+      toolbar: { show: true }
     },
-    max: 100
-  },
-  dataLabels: {
-    enabled: true,
-    formatter: (val: any) => `${Number(val).toFixed(1)}%`,
-    style: { fontSize: '11px', fontWeight: 'bold' }
-  },
-  tooltip: {
-    shared: true,
-    intersect: false,
-    y: {
-      formatter: (val: any) => `${Number(val).toFixed(1)}%`
-    }
-  },
-  legend: {
-    position: 'top',
-    horizontalAlign: 'center'
-  },
-  grid: {
-    borderColor: '#e5e7eb',
-    yaxis: { lines: { show: true } }
-  }
-};
-
-cumulativeUnder5DeathsChartOptions: CumulativeUnder5DeathsChartOptions = {
-  series: [],
-  chart: {
-    type: 'line',
-    height: 450,
-    toolbar: { show: true },
-    zoom: { enabled: true }
-  },
-  xaxis: {
-    categories: [
-      '≤24h',
-      '1–6 days',
-      '7–28 days',
-      '29 days-11 Months',
-      '1–<2 years',
-      '2–<3 years',
-      '3–<4 years',
-      '4–<5 years'
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%'
+      }
+    },
+    colors: [
+      '#1D4ED8', // Live births
+      '#C026D3', // Stillbirths
+      '#F59E0B'  // Abortion/Miscarriage
     ],
-    title: { text: 'Cumulative death timing' }
-  },
-  yaxis: {
-    title: { text: 'Cumulative deaths (Male + Female)' },
-    labels: { formatter: (v: any) => Number(v).toLocaleString() }
-  },
-  stroke: { curve: 'smooth', width: 3 },
-  markers: { size: 4 },
-  dataLabels: {
-    enabled: true,
-    formatter: (v: any) => Number(v).toLocaleString()
-  },
-  tooltip: {
-    shared: false,
-    intersect: true,
-    y: { formatter: (v: any) => Number(v).toLocaleString() }
-  },
-  legend: { position: 'bottom', horizontalAlign: 'center' },
-  grid: { borderColor: '#e5e7eb', yaxis: { lines: { show: true } } },
-  colors: []
-};
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Total outcomes' },
+      labels: {
+        formatter: (val: any) => Number(val).toLocaleString()
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => Number(val).toLocaleString(),
+      style: { fontSize: '11px', fontWeight: 'bold' }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => Number(val).toLocaleString()
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    },
+    grid: {
+      borderColor: '#e5e7eb',
+      yaxis: { lines: { show: true } }
+    }
+  };
+
+  pregnancyOutcomePercentChartOptions: PregnancyOutcomePercentChartOptions = {
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 420,
+      stacked: true,
+      stackType: '100%',
+      toolbar: { show: true }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%'
+      }
+    },
+    colors: [
+      '#1D4ED8', // Live births
+      '#C026D3', // Stillbirths
+      '#F59E0B'  // Abortion/Miscarriage
+    ],
+    xaxis: {
+      categories: [],
+      title: { text: 'Year' }
+    },
+    yaxis: {
+      title: { text: 'Percent (%)' },
+      labels: {
+        formatter: (val: any) => `${Number(val).toFixed(0)}%`
+      },
+      max: 100
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: (val: any) => `${Number(val).toFixed(1)}%`,
+      style: { fontSize: '11px', fontWeight: 'bold' }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: any) => `${Number(val).toFixed(1)}%`
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center'
+    },
+    grid: {
+      borderColor: '#e5e7eb',
+      yaxis: { lines: { show: true } }
+    }
+  };
+
+  cumulativeUnder5DeathsChartOptions: CumulativeUnder5DeathsChartOptions = {
+    series: [],
+    chart: {
+      type: 'line',
+      height: 450,
+      toolbar: { show: true },
+      zoom: { enabled: true }
+    },
+    xaxis: {
+      categories: [
+        '≤24h',
+        '1–6 days',
+        '7–28 days',
+        '29 days-11 Months',
+        '1–<2 years',
+        '2–<3 years',
+        '3–<4 years',
+        '4–<5 years'
+      ],
+      title: { text: 'Cumulative death timing' }
+    },
+    yaxis: {
+      title: { text: 'Cumulative deaths (Male + Female)' },
+      labels: { formatter: (v: any) => Number(v).toLocaleString() }
+    },
+    stroke: { curve: 'smooth', width: 3 },
+    markers: { size: 4 },
+    dataLabels: {
+      enabled: true,
+      formatter: (v: any) => Number(v).toLocaleString()
+    },
+    tooltip: {
+      shared: false,
+      intersect: true,
+      y: { formatter: (v: any) => Number(v).toLocaleString() }
+    },
+    legend: { position: 'bottom', horizontalAlign: 'center' },
+    grid: { borderColor: '#e5e7eb', yaxis: { lines: { show: true } } },
+    colors: []
+  };
 
   pyramidLabels: string[] = [];
   pyramidMale: number[] = [];
@@ -1344,7 +1549,7 @@ cumulativeUnder5DeathsChartOptions: CumulativeUnder5DeathsChartOptions = {
     });
   }
 
-    openSiteReportPage() {
+  openSiteReportPage() {
     if (!this.selectedSiteId) return;
 
     this.router.navigate(
@@ -1402,6 +1607,7 @@ cumulativeUnder5DeathsChartOptions: CumulativeUnder5DeathsChartOptions = {
     this.loadPopulationSummaryTrend();
     this.loadMaritalStatusChangeTrend();
     this.loadMarriageAgeDistributionTrend();
+    this.loadPerMarriageAgeDistributionTrend();
     this.loadBirthOutcomePregnancyTrend();
     this.loadBirthsByMotherAgeTrend();
     this.loadBirthPlaceOutcomeByYear();
@@ -1410,9 +1616,9 @@ cumulativeUnder5DeathsChartOptions: CumulativeUnder5DeathsChartOptions = {
     this.loadUnder5DeathAndStillbirthPlaceTrend();
     this.loadMortalityRatesTrend();
     this.loadHouseholdVisitOutcomesTrend();
-     //this.loadPregnancyOutcomeStacked();
-     this.loadPregnancyOutcomeCharts();
-this.loadCumulativeUnder5DeathsChart()
+    //this.loadPregnancyOutcomeStacked();
+    this.loadPregnancyOutcomeCharts();
+    this.loadCumulativeUnder5DeathsChart()
   }
 
   loadBirthOutcomePregnancyTrend() {
@@ -1463,6 +1669,42 @@ this.loadCumulativeUnder5DeathsChart()
       });
   }
 
+  // loadMarriageAgeDistributionTrend() {
+  //   if (!this.selectedSiteId) { return; }
+
+  //   this.reportService.getMarriageAgeDistributionTrend(this.selectedSiteId)
+  //     .subscribe(rows => {
+  //       const years = rows.map(r => r.dataYear.toString());
+
+  //       // male values negative (left side), female positive (right)
+  //       const maleU18 = rows.map(r => -Number(r.maleUnder18));
+  //       const male18_25 = rows.map(r => -Number(r.male18To25));
+  //       const male25_35 = rows.map(r => -Number(r.male25To35));
+  //       const male35p = rows.map(r => -Number(r.male35Plus));
+
+  //       const femU18 = rows.map(r => Number(r.femaleUnder18));
+  //       const fem18_25 = rows.map(r => Number(r.female18To25));
+  //       const fem25_35 = rows.map(r => Number(r.female25To35));
+  //       const fem35p = rows.map(r => Number(r.female35Plus));
+
+  //       this.yearWiseMarriageAgeChartOptions.xaxis = {
+  //         ...this.yearWiseMarriageAgeChartOptions.xaxis,
+  //         categories: years
+  //       };
+
+  //       this.yearWiseMarriageAgeChartOptions.series = [
+  //         { name: 'Male <18', data: maleU18 },
+  //         { name: 'Male 18-25', data: male18_25 },
+  //         { name: 'Male 25-35', data: male25_35 },
+  //         { name: 'Male 35+', data: male35p },
+  //         { name: 'Female <18', data: femU18 },
+  //         { name: 'Female 18-25', data: fem18_25 },
+  //         { name: 'Female 25-35', data: fem25_35 },
+  //         { name: 'Female 35+', data: fem35p }
+  //       ];
+  //     });
+  // }
+
   loadMarriageAgeDistributionTrend() {
     if (!this.selectedSiteId) { return; }
 
@@ -1470,11 +1712,10 @@ this.loadCumulativeUnder5DeathsChart()
       .subscribe(rows => {
         const years = rows.map(r => r.dataYear.toString());
 
-        // male values negative (left side), female positive (right)
-        const maleU18 = rows.map(r => -Number(r.maleUnder18));
-        const male18_25 = rows.map(r => -Number(r.male18To25));
-        const male25_35 = rows.map(r => -Number(r.male25To35));
-        const male35p = rows.map(r => -Number(r.male35Plus));
+        const maleU18 = rows.map(r => Number(r.maleUnder18));
+        const male18_25 = rows.map(r => Number(r.male18To25));
+        const male25_35 = rows.map(r => Number(r.male25To35));
+        const male35p = rows.map(r => Number(r.male35Plus));
 
         const femU18 = rows.map(r => Number(r.femaleUnder18));
         const fem18_25 = rows.map(r => Number(r.female18To25));
@@ -1487,17 +1728,131 @@ this.loadCumulativeUnder5DeathsChart()
         };
 
         this.yearWiseMarriageAgeChartOptions.series = [
-          { name: 'Male <18', data: maleU18 },
-          { name: 'Male 18-25', data: male18_25 },
-          { name: 'Male 25-35', data: male25_35 },
-          { name: 'Male 35+', data: male35p },
-          { name: 'Female <18', data: femU18 },
-          { name: 'Female 18-25', data: fem18_25 },
-          { name: 'Female 25-35', data: fem25_35 },
-          { name: 'Female 35+', data: fem35p }
+          { name: 'Male <18', data: maleU18, group: 'Male' },
+          { name: 'Male 18-25', data: male18_25, group: 'Male' },
+          { name: 'Male 25-35', data: male25_35, group: 'Male' },
+          { name: 'Male 35+', data: male35p, group: 'Male' },
+
+          { name: 'Female <18', data: femU18, group: 'Female' },
+          { name: 'Female 18-25', data: fem18_25, group: 'Female' },
+          { name: 'Female 25-35', data: fem25_35, group: 'Female' },
+          { name: 'Female 35+', data: fem35p, group: 'Female' }
         ];
       });
   }
+
+  // loadPerMarriageAgeDistributionTrend() {
+  //   if (!this.selectedSiteId) { return; }
+
+  //   this.reportService.getMarriageAgeDistributionTrend(this.selectedSiteId)
+  //     .subscribe(rows => {
+  //       const years = rows.map(r => r.dataYear.toString());
+
+  //       const maleU18 = rows.map(r => Number(r.maleUnder18));
+  //       const male18_25 = rows.map(r => Number(r.male18To25));
+  //       const male25_35 = rows.map(r => Number(r.male25To35));
+  //       const male35p = rows.map(r => Number(r.male35Plus));
+  //       const maletotal = rows.map(r => 
+  //         Number(r.maleUnder18) + 
+  //         Number(r.male18To25) + 
+  //         Number(r.male25To35) + 
+  //         Number(r.male35Plus)
+  //       );
+  //    const maleU18per = maleU18.map((val, idx) => maletotal[idx] ? (val / maletotal[idx]) * 100 : 0);
+  //    const male18_25per = male18_25.map((val, idx) => maletotal[idx] ? (val / maletotal[idx]) * 100   : 0);
+  //    const male25_35per = male25_35.map((val, idx) => maletotal[idx] ? (val / maletotal[idx]) * 100   : 0);
+  //    const male35pper = male35p.map((val, idx) => maletotal[idx] ? (val / maletotal[idx]) * 100       : 0);   
+
+  //       const femU18 = rows.map(r => Number(r.femaleUnder18));
+  //       const fem18_25 = rows.map(r => Number(r.female18To25));
+  //       const fem25_35 = rows.map(r => Number(r.female25To35));
+  //       const fem35p = rows.map(r => Number(r.female35Plus));
+  //        const femtotal = rows.map(r => 
+  //         Number(r.femaleUnder18) + 
+  //         Number(r.female18To25) + 
+  //         Number(r.female25To35) + 
+  //         Number(r.female35Plus)
+  //       );
+  //    const femU18per = femU18.map((val, idx) => femtotal[idx] ? (val / femtotal[idx]) * 100 : 0);
+  //    const fem18_25per = fem18_25.map((val, idx) => femtotal[idx] ? (val / femtotal[idx]) * 100   : 0);
+  //    const fem25_35per = fem25_35.map((val, idx) => femtotal[idx] ? (val / femtotal[idx]) * 100   : 0);
+  //    const fem35pper = fem35p.map((val, idx) => femtotal[idx] ? (val / femtotal[idx]) * 100       : 0); 
+
+  //       this.yearWisePerMarriageAgeChartOptions.xaxis = {
+  //         ...this.yearWisePerMarriageAgeChartOptions.xaxis,
+  //         categories: years
+  //       };
+
+  //       this.yearWisePerMarriageAgeChartOptions.series = [
+  //         { name: 'Male <18', data: maleU18per, group: 'Male' },
+  //         { name: 'Male 18-25', data: male18_25per, group: 'Male' },
+  //         { name: 'Male 25-35', data: male25_35per, group: 'Male' },
+  //         { name: 'Male 35+', data: male35pper, group: 'Male' },
+
+  //         { name: 'Female <18', data: femU18per, group: 'Female' },
+  //         { name: 'Female 18-25', data: fem18_25per, group: 'Female' },
+  //         { name: 'Female 25-35', data: fem25_35per, group: 'Female' },
+  //         { name: 'Female 35+', data: fem35pper, group: 'Female' }
+  //       ];
+  //     });
+  // }
+
+   loadPerMarriageAgeDistributionTrend() {
+    if (!this.selectedSiteId) { return; }
+
+    this.reportService.getMarriageAgeDistributionTrend(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
+
+        const maleU18 = rows.map(r => Number(r.maleUnder18));
+        const male18_25 = rows.map(r => Number(r.male18To25));
+        const male25_35 = rows.map(r => Number(r.male25To35));
+        const male35p = rows.map(r => Number(r.male35Plus));
+        const maletotal = rows.map(r => 
+          Number(r.maleUnder18) + 
+          Number(r.male18To25) + 
+          Number(r.male25To35) + 
+          Number(r.male35Plus)
+        );
+     const maleU18per = maleU18.map((val, idx) => maletotal[idx] ? (val / maletotal[idx]) * 100 : 0);
+     const male18_25per = male18_25.map((val, idx) => maletotal[idx] ? (val / maletotal[idx]) * 100   : 0);
+     const male25_35per = male25_35.map((val, idx) => maletotal[idx] ? (val / maletotal[idx]) * 100   : 0);
+     const male35pper = male35p.map((val, idx) => maletotal[idx] ? (val / maletotal[idx]) * 100       : 0);   
+
+        const femU18 = rows.map(r => Number(r.femaleUnder18));
+        const fem18_25 = rows.map(r => Number(r.female18To25));
+        const fem25_35 = rows.map(r => Number(r.female25To35));
+        const fem35p = rows.map(r => Number(r.female35Plus));
+         const femtotal = rows.map(r => 
+          Number(r.femaleUnder18) + 
+          Number(r.female18To25) + 
+          Number(r.female25To35) + 
+          Number(r.female35Plus)
+        );
+     const femU18per = femU18.map((val, idx) => femtotal[idx] ? (val / femtotal[idx]) * 100 : 0);
+     const fem18_25per = fem18_25.map((val, idx) => femtotal[idx] ? (val / femtotal[idx]) * 100   : 0);
+     const fem25_35per = fem25_35.map((val, idx) => femtotal[idx] ? (val / femtotal[idx]) * 100   : 0);
+     const fem35pper = fem35p.map((val, idx) => femtotal[idx] ? (val / femtotal[idx]) * 100       : 0); 
+
+        this.yearWisePerMarriageAgeChartOptions.xaxis = {
+          ...this.yearWisePerMarriageAgeChartOptions.xaxis,
+          categories: years
+        };
+
+        this.yearWisePerMarriageAgeChartOptions.series = [
+          { name: 'Male <18 %', data: maleU18per, group: 'Male' },
+          { name: 'Male 18-25 %', data: male18_25per, group: 'Male' },
+          { name: 'Male 25-35 %', data: male25_35per, group: 'Male' },
+          { name: 'Male 35+ %', data: male35pper, group: 'Male' },
+
+          { name: 'Female <18 %', data: femU18per, group: 'Female' },
+          { name: 'Female 18-25 %', data: fem18_25per, group: 'Female' },
+          { name: 'Female 25-35 %', data: fem25_35per, group: 'Female' },
+          { name: 'Female 35+ %', data: fem35pper, group: 'Female' }
+        ];
+      });
+  }
+
 
   loadPopulationSummaryTrend() {
     if (!this.selectedSiteId) return;
@@ -1659,15 +2014,14 @@ this.loadCumulativeUnder5DeathsChart()
       });
   }
 
-
   loadMaritalStatusChangeTrend() {
     if (!this.selectedSiteId) return;
 
     this.reportService.getMaritalStatusChangeTrend(this.selectedSiteId)
       .subscribe(rows => {
+
         const years = rows.map(r => r.dataYear.toString());
 
-        // total = sum of all change types for the year
         const totals = rows.map(r => {
           const a = Number(r.totalMSChanges) || 0;
           const b = Number(r.divorces) || 0;
@@ -1677,70 +2031,65 @@ this.loadCumulativeUnder5DeathsChart()
           return a + b + c + d + e;
         });
 
-        // percentages (one decimal) for each category per year
-        const MSChanges = rows.map((r, i) => totals[i] ? Number(((Number(r.totalMSChanges) / totals[i]) * 100).toFixed(1)) : 0);
-        const divorcesPct = rows.map((r, i) => totals[i] ? Number(((Number(r.divorces) / totals[i]) * 100).toFixed(1)) : 0);
-        const separationsPct = rows.map((r, i) => totals[i] ? Number(((Number(r.separations) / totals[i]) * 100).toFixed(1)) : 0);
-        const widowsPct = rows.map((r, i) => totals[i] ? Number(((Number(r.widowsWidowers) / totals[i]) * 100).toFixed(1)) : 0);
-        const reunionsPct = rows.map((r, i) => totals[i] ? Number(((Number(r.reunions) / totals[i]) * 100).toFixed(1)) : 0);
+        const MSChanges = rows.map((r, i) =>
+          totals[i] ? Number(((Number(r.totalMSChanges) / totals[i]) * 100).toFixed(1)) : 0
+        );
+
+        const divorcesPct = rows.map((r, i) =>
+          totals[i] ? Number(((Number(r.divorces) / totals[i]) * 100).toFixed(1)) : 0
+        );
+
+        const separationsPct = rows.map((r, i) =>
+          totals[i] ? Number(((Number(r.separations) / totals[i]) * 100).toFixed(1)) : 0
+        );
+
+        const widowsPct = rows.map((r, i) =>
+          totals[i] ? Number(((Number(r.widowsWidowers) / totals[i]) * 100).toFixed(1)) : 0
+        );
+
+        const reunionsPct = rows.map((r, i) =>
+          totals[i] ? Number(((Number(r.reunions) / totals[i]) * 100).toFixed(1)) : 0
+        );
 
         this.maritalStatusChartOptions = {
           ...this.maritalStatusChartOptions,
+
+          plotOptions: {
+            ...this.maritalStatusChartOptions.plotOptions,
+            bar: {
+              ...this.maritalStatusChartOptions.plotOptions.bar,
+              columnWidth: '65%',
+              borderRadius: 2
+            }
+          },
+
           xaxis: {
             ...this.maritalStatusChartOptions.xaxis,
             categories: years
           },
+
           yaxis: {
-            // show integer ticks on axis, but keep data/labels elsewhere to one decimal
+            min: 0,
+            max: 100,
+            tickAmount: 5,
+            decimalsInFloat: 0,
             title: { text: 'Percent (%)' },
             labels: {
-              formatter: (val: any) => String(Math.round(Number(val)))
-            },
-            max: 100
-          },
-          dataLabels: {
-            ...this.maritalStatusChartOptions.dataLabels,
-            formatter: (val: any) => {
-              const num = Number(val);
-              return isNaN(num) ? '' : `${num.toFixed(1)}%`;
+              formatter: (val: any) => Math.round(val).toString()
             }
           },
-          tooltip: {
-            ...this.maritalStatusChartOptions.tooltip,
-            y: {
-              formatter: (val: any) => {
-                const num = Number(val);
-                return isNaN(num) ? '' : `${num.toFixed(1)}%`;
-              }
-            }
-          },
+
           series: [
-            // keep a 100% reference series if you want to show total as baseline
-            {
-              name: 'MSChanges (%)',
-              data: MSChanges,
-              type: 'column'
-            },
-            {
-              name: 'Divorces (%)',
-              data: divorcesPct
-            },
-            {
-              name: 'Separations (%)',
-              data: separationsPct
-            },
-            {
-              name: 'Widows / widowers (%)',
-              data: widowsPct
-            },
-            {
-              name: 'Reunions (%)',
-              data: reunionsPct
-            }
+            { name: 'MSChanges (%)', data: MSChanges },
+            { name: 'Divorces (%)', data: divorcesPct },
+            { name: 'Separations (%)', data: separationsPct },
+            { name: 'Widows / widowers (%)', data: widowsPct },
+            { name: 'Reunions (%)', data: reunionsPct }
           ]
         };
       });
   }
+
 
   loadBirthsByMotherAgeTrend() {
     if (!this.selectedSiteId) return;
@@ -2040,159 +2389,159 @@ this.loadCumulativeUnder5DeathsChart()
       });
   }
 
-//   loadPregnancyOutcomeStacked() {
-//   if (!this.selectedSiteId) return;
+  //   loadPregnancyOutcomeStacked() {
+  //   if (!this.selectedSiteId) return;
 
-//   this.reportService.getPregnancyOutcomeStacked(this.selectedSiteId)
-//     .subscribe(rows => {
-//       const years = rows.map(r => r.dataYear.toString());
+  //   this.reportService.getPregnancyOutcomeStacked(this.selectedSiteId)
+  //     .subscribe(rows => {
+  //       const years = rows.map(r => r.dataYear.toString());
 
-//       this.pregnancyOutcomeStackedChartOptions = {
-//         ...this.pregnancyOutcomeStackedChartOptions,
-//         xaxis: { ...this.pregnancyOutcomeStackedChartOptions.xaxis, categories: years },
-//         series: [
-//           { name: 'Live births', data: rows.map(r => r.liveBirths) },
-//           { name: 'Stillbirths', data: rows.map(r => r.stillbirths) },
-//           { name: 'Abortion/Miscarriage', data: rows.map(r => r.abortionMiscarriage) }
-//         ]
-//       };
-//     });
-// }
+  //       this.pregnancyOutcomeStackedChartOptions = {
+  //         ...this.pregnancyOutcomeStackedChartOptions,
+  //         xaxis: { ...this.pregnancyOutcomeStackedChartOptions.xaxis, categories: years },
+  //         series: [
+  //           { name: 'Live births', data: rows.map(r => r.liveBirths) },
+  //           { name: 'Stillbirths', data: rows.map(r => r.stillbirths) },
+  //           { name: 'Abortion/Miscarriage', data: rows.map(r => r.abortionMiscarriage) }
+  //         ]
+  //       };
+  //     });
+  // }
 
-loadPregnancyOutcomeCharts() {
-  if (!this.selectedSiteId) return;
+  loadPregnancyOutcomeCharts() {
+    if (!this.selectedSiteId) return;
 
-  this.reportService.getPregnancyOutcomeStacked(this.selectedSiteId)
-    .subscribe(rows => {
-      const years = rows.map(r => r.dataYear.toString());
+    this.reportService.getPregnancyOutcomeStacked(this.selectedSiteId)
+      .subscribe(rows => {
+        const years = rows.map(r => r.dataYear.toString());
 
-      const live = rows.map(r => Number(r.liveBirths));
-      const still = rows.map(r => Number(r.stillbirths));
-      const abort = rows.map(r => Number(r.abortionMiscarriage));
+        const live = rows.map(r => Number(r.liveBirths));
+        const still = rows.map(r => Number(r.stillbirths));
+        const abort = rows.map(r => Number(r.abortionMiscarriage));
 
-      // ✅ CHART 1: counts (your existing stacked chart)
-      this.pregnancyOutcomeStackedChartOptions = {
-        ...this.pregnancyOutcomeStackedChartOptions,
-        xaxis: { ...this.pregnancyOutcomeStackedChartOptions.xaxis, categories: years },
-        series: [
-          { name: 'Live births', data: live },
-          { name: 'Stillbirths', data: still },
-          { name: 'Abortion/Miscarriage', data: abort }
-        ]
-      };
+        // ✅ CHART 1: counts (your existing stacked chart)
+        this.pregnancyOutcomeStackedChartOptions = {
+          ...this.pregnancyOutcomeStackedChartOptions,
+          xaxis: { ...this.pregnancyOutcomeStackedChartOptions.xaxis, categories: years },
+          series: [
+            { name: 'Live births', data: live },
+            { name: 'Stillbirths', data: still },
+            { name: 'Abortion/Miscarriage', data: abort }
+          ]
+        };
 
-      // ✅ CHART 2: percentages (100% stacked)
-      const pctLive: number[] = [];
-      const pctStill: number[] = [];
-      const pctAbort: number[] = [];
+        // ✅ CHART 2: percentages (100% stacked)
+        const pctLive: number[] = [];
+        const pctStill: number[] = [];
+        const pctAbort: number[] = [];
 
-      for (let i = 0; i < rows.length; i++) {
-        const total = live[i] + still[i] + abort[i];
-        if (total > 0) {
-          pctLive.push((live[i] / total) * 100);
-          pctStill.push((still[i] / total) * 100);
-          pctAbort.push((abort[i] / total) * 100);
-        } else {
-          pctLive.push(0);
-          pctStill.push(0);
-          pctAbort.push(0);
+        for (let i = 0; i < rows.length; i++) {
+          const total = live[i] + still[i] + abort[i];
+          if (total > 0) {
+            pctLive.push((live[i] / total) * 100);
+            pctStill.push((still[i] / total) * 100);
+            pctAbort.push((abort[i] / total) * 100);
+          } else {
+            pctLive.push(0);
+            pctStill.push(0);
+            pctAbort.push(0);
+          }
         }
-      }
 
-      this.pregnancyOutcomePercentChartOptions = {
-        ...this.pregnancyOutcomePercentChartOptions,
-        xaxis: { ...this.pregnancyOutcomePercentChartOptions.xaxis, categories: years },
-        series: [
-          { name: 'Live births %', data: pctLive },
-          { name: 'Stillbirths %', data: pctStill },
-          { name: 'Abortion/Miscarriage %', data: pctAbort }
-        ]
-      };
-    });
-}
+        this.pregnancyOutcomePercentChartOptions = {
+          ...this.pregnancyOutcomePercentChartOptions,
+          xaxis: { ...this.pregnancyOutcomePercentChartOptions.xaxis, categories: years },
+          series: [
+            { name: 'Live births %', data: pctLive },
+            { name: 'Stillbirths %', data: pctStill },
+            { name: 'Abortion/Miscarriage %', data: pctAbort }
+          ]
+        };
+      });
+  }
 
-private randomColor(): string {
-  const r = Math.floor(80 + Math.random() * 160);
-  const g = Math.floor(80 + Math.random() * 160);
-  const b = Math.floor(80 + Math.random() * 160);
-  return `rgb(${r},${g},${b})`;
-}
+  private randomColor(): string {
+    const r = Math.floor(80 + Math.random() * 160);
+    const g = Math.floor(80 + Math.random() * 160);
+    const b = Math.floor(80 + Math.random() * 160);
+    return `rgb(${r},${g},${b})`;
+  }
 
-private readonly strongPalette = [
-  '#0145ffff', '#0a0646ff', '#5d3691a6', '#5307d6ff', '#7103bbff',
-  '#a38708ff', '#f08307ff', '#B45309', '#fd5e02ff', '#a14f0c98',
-  '#ff0101ff', '#BE185D', '#db4444bb', '#fc3838ff', '#af075bff',
-  '#08978bff', '#115663ce', '#09b489ff', '#04ee37ff', '#b3f106ff'
-];
+  private readonly strongPalette = [
+    '#0145ffff', '#0a0646ff', '#5d3691a6', '#5307d6ff', '#7103bbff',
+    '#a38708ff', '#f08307ff', '#B45309', '#fd5e02ff', '#a14f0c98',
+    '#ff0101ff', '#BE185D', '#db4444bb', '#fc3838ff', '#af075bff',
+    '#08978bff', '#115663ce', '#09b489ff', '#04ee37ff', '#b3f106ff'
+  ];
 
-private getColor(i: number): string {
-  return this.strongPalette[i % this.strongPalette.length];
-}
-loadCumulativeUnder5DeathsChart() {
-  if (!this.selectedSiteId) return;
+  private getColor(i: number): string {
+    return this.strongPalette[i % this.strongPalette.length];
+  }
+  loadCumulativeUnder5DeathsChart() {
+    if (!this.selectedSiteId) return;
 
-  this.reportService.getCumulativeUnder5Deaths(this.selectedSiteId)
-    .subscribe(rows => {
-      const colors = rows.map((_, i) => this.getColor(i));
+    this.reportService.getCumulativeUnder5Deaths(this.selectedSiteId)
+      .subscribe(rows => {
+        const colors = rows.map((_, i) => this.getColor(i));
 
-      const series = rows.map((r, i) => ({
-        name: r.dataYear.toString(),
-        data: [
-          r.deathsWithinFirst24Hours,
-          r.deaths1To6Days,
-          r.deaths7To29Days,
-          r.deaths29DaysTo11Months,
-          r.deaths1To2Years,
-          r.deaths2To3Years,
-          r.deaths3To4Years,
-          r.deaths4To5Years
-        ]
-      }));
+        const series = rows.map((r, i) => ({
+          name: r.dataYear.toString(),
+          data: [
+            r.deathsWithinFirst24Hours,
+            r.deaths1To6Days,
+            r.deaths7To29Days,
+            r.deaths29DaysTo11Months,
+            r.deaths1To2Years,
+            r.deaths2To3Years,
+            r.deaths3To4Years,
+            r.deaths4To5Years
+          ]
+        }));
 
-      this.cumulativeUnder5DeathsChartOptions = {
-        ...this.cumulativeUnder5DeathsChartOptions,
-        series,
-        colors,
-        stroke: { curve: 'smooth', width: 4 },
-        markers: { size: 4, hover: { size: 7 } },
-        tooltip: {
-          shared: true,
-          intersect: false,
-          y: { formatter: (v: any) => Number(v).toLocaleString() }
-        }
-      };
-    });
-}
+        this.cumulativeUnder5DeathsChartOptions = {
+          ...this.cumulativeUnder5DeathsChartOptions,
+          series,
+          colors,
+          stroke: { curve: 'smooth', width: 4 },
+          markers: { size: 4, hover: { size: 7 } },
+          tooltip: {
+            shared: true,
+            intersect: false,
+            y: { formatter: (v: any) => Number(v).toLocaleString() }
+          }
+        };
+      });
+  }
 
-// loadCumulativeUnder5DeathsChart() {
-//   if (!this.selectedSiteId) return;
+  // loadCumulativeUnder5DeathsChart() {
+  //   if (!this.selectedSiteId) return;
 
-//   this.reportService.getCumulativeUnder5Deaths(this.selectedSiteId)
-//     .subscribe(rows => {
-//       const colors: string[] = [];
+  //   this.reportService.getCumulativeUnder5Deaths(this.selectedSiteId)
+  //     .subscribe(rows => {
+  //       const colors: string[] = [];
 
-//       const series = rows.map(r => {
-//         colors.push(this.randomColor());
-//         return {
-//           name: r.dataYear.toString(),
-//           data: [
-//             r.deathsWithinFirst24Hours,
-//             r.deaths1To6Days,
-//             r.deaths7To29Days,
-//             r.deaths29DaysTo11Months,
-//             r.deaths1To2Years,
-//             r.deaths2To3Years,
-//             r.deaths3To4Years,
-//             r.deaths4To5Years
-//           ]
-//         };
-//       });
+  //       const series = rows.map(r => {
+  //         colors.push(this.randomColor());
+  //         return {
+  //           name: r.dataYear.toString(),
+  //           data: [
+  //             r.deathsWithinFirst24Hours,
+  //             r.deaths1To6Days,
+  //             r.deaths7To29Days,
+  //             r.deaths29DaysTo11Months,
+  //             r.deaths1To2Years,
+  //             r.deaths2To3Years,
+  //             r.deaths3To4Years,
+  //             r.deaths4To5Years
+  //           ]
+  //         };
+  //       });
 
-//       this.cumulativeUnder5DeathsChartOptions = {
-//         ...this.cumulativeUnder5DeathsChartOptions,
-//         series,
-//         colors
-//       };
-//     });
-// }
+  //       this.cumulativeUnder5DeathsChartOptions = {
+  //         ...this.cumulativeUnder5DeathsChartOptions,
+  //         series,
+  //         colors
+  //       };
+  //     });
+  // }
 }

@@ -175,6 +175,7 @@
   [chart]="maritalStatusChartOptions.chart"
   [plotOptions]="maritalStatusChartOptions.plotOptions"
   [xaxis]="maritalStatusChartOptions.xaxis"
+  [yaxis]="maritalStatusChartOptions.yaxis"   
   [dataLabels]="maritalStatusChartOptions.dataLabels"
   [stroke]="maritalStatusChartOptions.stroke"
   [legend]="maritalStatusChartOptions.legend"
@@ -191,12 +192,31 @@
   [plotOptions]="yearWiseMarriageAgeChartOptions.plotOptions"
   [colors]="yearWiseMarriageAgeChartOptions.colors"
   [dataLabels]="yearWiseMarriageAgeChartOptions.dataLabels"
+  [stroke]="yearWiseMarriageAgeChartOptions.stroke"
   [xaxis]="yearWiseMarriageAgeChartOptions.xaxis"
   [yaxis]="yearWiseMarriageAgeChartOptions.yaxis"
   [grid]="yearWiseMarriageAgeChartOptions.grid"
   [tooltip]="yearWiseMarriageAgeChartOptions.tooltip"
   [legend]="yearWiseMarriageAgeChartOptions.legend"
   [title]="yearWiseMarriageAgeChartOptions.title">
+</apx-chart>
+
+<hr />
+
+<h5>Average marriage age distribution by year (Male left, Female right)</h5>
+<apx-chart
+  [series]="yearWisePerMarriageAgeChartOptions.series"
+  [chart]="yearWisePerMarriageAgeChartOptions.chart"
+  [plotOptions]="yearWisePerMarriageAgeChartOptions.plotOptions"
+  [colors]="yearWisePerMarriageAgeChartOptions.colors"
+  [dataLabels]="yearWisePerMarriageAgeChartOptions.dataLabels"
+  [stroke]="yearWisePerMarriageAgeChartOptions.stroke"
+  [xaxis]="yearWisePerMarriageAgeChartOptions.xaxis"
+  [yaxis]="yearWisePerMarriageAgeChartOptions.yaxis"
+  [grid]="yearWisePerMarriageAgeChartOptions.grid"
+  [tooltip]="yearWisePerMarriageAgeChartOptions.tooltip"
+  [legend]="yearWisePerMarriageAgeChartOptions.legend"
+  [title]="yearWisePerMarriageAgeChartOptions.title">
 </apx-chart>
 
 
